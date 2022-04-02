@@ -21,7 +21,7 @@ class Model(tf.keras.Model):
         super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
-        self.batch_size = 5
+        self.batch_size = 100
         self.output_size = 5
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
@@ -166,7 +166,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 100
+    epochs = 1000
 
     # Load data using preprocess function.
     print('Loading data...')
