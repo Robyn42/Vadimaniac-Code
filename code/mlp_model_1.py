@@ -166,7 +166,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 10000
+    epochs = 100
 
     # Load data using preprocess function.
     print('Loading data...')
@@ -178,17 +178,31 @@ def main():
     # The code below also removes the 'timestep' feature from the data since it may not have 
     # any predictive power.
 
-    # Numpy arrays to hold the data.
-    inputs = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)*(number_timesteps - 1)]) 
-    true_values = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)])
     print('Preparing data...')
-    for i in tqdm(range(data.shape[0]//number_timesteps)):
-        inputs_seq, true_values_seq = data[i*(number_timesteps - 1):(i+1)*(number_timesteps - 1), 1:], data[(i+1)*(number_timesteps - 1), 1:]
-        inputs[i] = inputs_seq.reshape(1, (data.shape[1] - 1)*(number_timesteps - 1))
-        true_values[i] = true_values_seq
+    # Numpy arrays to hold the data.
+    #inputs = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)*(number_timesteps - 1)]) 
+    #true_values = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)])
+    
+    
+    # This is the first method for creating the sequences and true values
+    #for i in tqdm(range(data.shape[0]//number_timesteps)):
+    #    inputs_seq, true_values_seq = data[i*(number_timesteps - 1):(i+1)*(number_timesteps - 1), 1:], data[(i+1)*(number_timesteps - 1), 1:]
+    #    inputs[i] = inputs_seq.reshape(1, (data.shape[1] - 1)*(number_timesteps - 1))
+    #    true_values[i] = true_values_seq
 
-    #print(inputs.shape)
-    #print(true_values.shape)
+    # This is the second method for creating the sequences. It uses the concept of an ngram.
+    # In this case it is an '5 gram' Where the there is 4 timesteps and you are trying to 
+    # Predict the 5th. 
+    # Each timestep consisting of the features (eg. position_x, position_y, heading, velocity_x, velocity_y)
+    # collectively is considered to be a 'token' or 'word' and the sequence is the sentence.
+    inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
+
+    # Takes the last column and splits it off the data arrays into a seperate 
+    # label array.
+    inputs, true_values = np.hsplit(inputs_sequence, [-1])
+
+    #print(inputs[:10])
+    #print(true_values[0])
 
 
     # Split the data into train and test with roughly a 70% train, 30% test split.

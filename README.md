@@ -1,3 +1,4 @@
+
 # Vadimaniac-Code
 Repository for Vadimaniacs' Heresy's project code
 
@@ -10,8 +11,8 @@ The preprocess.py may be usable with many different types of models.
 The mlp_model_1.py model is a very basic 2 layer mlp that predicts 5 of the features that were
 chosen in the preprocess.py code. The only visualization that it has at this time is 
 an output of the testing loss.
-As it turns out, the testing loss is extremely high righ now. The primary reason may be the 
-fact that it is limited to the amount of data it is seeing and that I have not done any
-tweaking to the hyperparameters. 
-Another reason may be the way it prepares the data. I plan to experiment with a 
-version that uses the "n-gram" format.
+
+Switching the data input into the model to an '5-gram' layout greatly improved the 
+testing loss. Currently, the loss is often between 100 and 400 with the number of epochs 
+tested being 100 and 1000. The model takes much longer to train per epoch. Currently,
+with the limited dataset, it takes roughly 45 min for 1000 epochs. 
