@@ -4,6 +4,7 @@ from tensorflow.keras import Model
 from tensorflow.keras import layers 
 from tqdm import tqdm
 from functools import reduce
+import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
 class Model(tf.keras.Model):
@@ -154,6 +155,23 @@ def test(model, test_inputs, test_true_values):
     
     return testing_loss
 
+def visualize_loss(losses):
+    '''
+    Outputs a plot of the losses over all batches and epochs.
+
+    params losses: array of loss values.
+    return: plot
+    '''
+
+    batches = np.arange(1, len(losses) + 1)
+    plt.title('Loss per batch')
+    plt.xlabel('batch #')
+    plt.ylabel('Loss value')
+    plt.plot(batches, losses)
+    plt.show()
+
+    pass
+
 def main():
     '''
     Main function.
@@ -166,7 +184,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 1000
+    epochs = 100
 
     # Load data using preprocess function.
     print('Loading data...')
@@ -219,12 +237,14 @@ def main():
 
 
     # Train model for a number of epochs.
-    
+
+    losses = []
+
     print('Model training ...')
     for i in tqdm(range(epochs)):
-        train(model, train_inputs, train_true_values)
+        losses.append(train(model, train_inputs, train_true_values))
 
-
+    visualize_loss(losses)
     # Test model. Print the average testing loss.
     print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
 
