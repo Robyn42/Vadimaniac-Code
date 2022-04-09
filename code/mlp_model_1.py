@@ -7,7 +7,7 @@ from functools import reduce
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
-class Model(tf.keras.Model):
+class MLP_Forecasting_Model(tf.keras.Model):
     def __init__(self):
 
         '''
@@ -18,12 +18,12 @@ class Model(tf.keras.Model):
         There are currently 2 dense layers with no softmax layer
         since the predictions are continuous variables.
         '''
-
-        super(Model, self).__init__()
+        super(MLP_Forecasting_Model, self).__init__()
+        #super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
         self.batch_size = 100
-        self.output_size = 5
+        self.output_size = 5 # The number of features in the data.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
@@ -31,9 +31,9 @@ class Model(tf.keras.Model):
 
         # Initialize model layers.
         # Trying LeakyReLU instead o ReLU.
-        self.dense_1 = tf.keras.layers.Dense(300, activation = 'LeakyReLU')
+        self.dense_1 = tf.keras.layers.Dense(units = 100, activation = 'LeakyReLU')
         # No activation on this layer as the output layer.
-        self.dense_2 = tf.keras.layers.Dense(self.output_size)
+        self.dense_2 = tf.keras.layers.Dense(units = self.output_size)
 
         self.Dropout = tf.keras.layers.Dropout(rate = self.dropout_rate)
 
@@ -184,7 +184,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 100
+    epochs = 500
 
     # Load data using preprocess function.
     print('Loading data...')
@@ -218,22 +218,28 @@ def main():
     # Takes the last column and splits it off the data arrays into a seperate 
     # label array.
     inputs, true_values = np.hsplit(inputs_sequence, [-1])
-
+    #print(inputs.shape)
     #print(inputs[:10])
     #print(true_values[0])
-
+    # The inputs need to be flattened so that dimensions 2 and 3 
+    # become 1 dimension. The shape should be (the length of
+    # dimension 1, dimension 2 x dimension 3)
+    input_dim = inputs.shape[1] * inputs.shape[2]
+    inputs = np.reshape(inputs, (inputs.shape[0], input_dim))
+    true_values_dim = true_values.shape[1] * true_values.shape[2]
+    true_values = np.reshape(true_values, (true_values.shape[0], true_values_dim))
+    #print(inputs.shape)
+    #print(true_values.shape)
 
     # Split the data into train and test with roughly a 70% train, 30% test split.
-
     split = np.floor(inputs.shape[0]*0.70).astype(np.int32)
-
     train_inputs, train_true_values = inputs[:split, :], true_values[:split]
     test_inputs, test_true_values = inputs[split:, :], true_values[split:]
     #print(train_inputs)
     #print(train_true_values)
     
     # Initialize model.
-    model = Model()
+    model = MLP_Forecasting_Model()
 
 
     # Train model for a number of epochs.
@@ -248,8 +254,26 @@ def main():
     # Test model. Print the average testing loss.
     print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
 
+    #print("Saving model...")
+    #tf.saved_model.save(model, "./saved_MLP_Forecasting_Model")
+    #print("Model saved!")
 
-    return
+    # Select a sequence from the data for prediction.
+    # Again not including the "timesteps" column as in the dataset above.
+    inference_data = data[:4, 1:]
+    # Flatten timesteps as above
+    inference_dim = inference_data.shape[0] * inference_data.shape[1]
+    prediction_inputs = np.reshape(inference_data, (1, inference_dim))
+    #Print input timesteps
+    print("Giving the model the following timesteps:")
+    print(prediction_inputs)
+
+    # Print predicted timestep 
+    print("The next timestep values will be:")
+    print(model(prediction_inputs))
+
+    pass
+
 
 if __name__ == '__main__':
     main()

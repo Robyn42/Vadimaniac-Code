@@ -9,13 +9,16 @@ Pyarrow is used to open the parquet and feather files in the Argoverse2 download
 The preprocess.py may be usable with many different types of models.
 
 The mlp_model_1.py model is a very basic 2 layer mlp that predicts 5 of the features that were
-chosen in the preprocess.py code. The only visualization that it has at this time is 
-an output of the testing loss.
+chosen in the preprocess.py code. After the model trains, it outputs a prediction for the 
+values of all the features in the next timestap. There is a prechosen timeseries 
+that the prediction is based on that prints just ahead of the prediction.
+
+There is a visualizatoin of the training loss per batch as well.
 
 Switching the data input into the model to an '5-gram' layout greatly improved the 
-testing loss. Currently, the loss is often between 100 and 400 with the number of epochs 
-tested being 100 and 1000. The model takes much longer to train per epoch. Currently,
-with the limited dataset, it takes roughly 45 min for 1000 epochs. 
+testing loss. I corrected an error in the processing where the data was not being properly 
+flattened. Now the model trains much faster and appears to be more accurate depending on the 
+number of epochs.
 
 
 The gru_model.py model has one GRU layer with two dense layers. There is a 
