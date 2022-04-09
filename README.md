@@ -24,4 +24,14 @@ number of epochs.
 The gru_model.py model has one GRU layer with two dense layers. There is a 
 visualization for the batch loss on this one. The training loss decreases 
 very smoothly before 1000 epochs. There may be overfitting though since the 
-test loss is fairly high to start but stabalizes at ~2500 after 1000 epochs as well.
+test loss is fairly high to start but stabalizes after 1000 epochs as well.
+
+The model presents a prediction of the next timestep just as the mlp mpdel does.
+There is a difference in the way the prediction is displayed though. It appears as though some
+recent revisions of the keras LSTM and GRU models do not give the user the ability 
+to set the input shape. They expect batch size, timestps (or window size), feature only. Therefore,
+the output is three dimensional. If we keep the number of outputs from the GRU layer at 
+the window size then the timestep that is predicted all have the same value. If you increase the 
+number of outputs then each timestep predicted varies by a small margin. Keeping the output 
+at window size does not appear to effect the prediction accuracy but I cannot say this is the 
+correct way to do this. More research is needed. 

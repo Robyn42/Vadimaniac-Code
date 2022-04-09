@@ -7,7 +7,7 @@ from functools import reduce
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
-class Model(tf.keras.Model):
+class GRU_Forecasting_Model(tf.keras.Model):
     def __init__(self):
 
         '''
@@ -19,14 +19,14 @@ class Model(tf.keras.Model):
         variables so MSE is used for the loss 
         calculation.
         '''
-
-        super(Model, self).__init__()
+        super(GRU_Forecasting_Model, self).__init__()
+        #super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
         self.batch_size = 100
         self.window_size = 10
         self.dense_size = 100
-        self.output_size = 5
+        self.output_size = 5 # The number of features per timestep.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.leaky_relu_alpha = 3e-1
@@ -266,7 +266,7 @@ def main():
     test_true_values = test_true_values[1:]
 
     # Initialize the model
-    model = Model()
+    model = GRU_Forecasting_Model()
 
     # Train model for a number of epochs.
     print('Model training ...')
@@ -283,6 +283,23 @@ def main():
     print('Model testing ...')
     print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
 
+    #print("Saving model...")
+    #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model")
+    #print("Model saved!")
+
+    # Select a sequence from the data for prediction.
+    # Again not including the "timesteps" column as in the dataset above.
+    inference_data = data[:10, 1:]
+    # Flatten timesteps as above
+    #inference_dim = inference_data.shape[0] * inference_data.shape[1]
+    prediction_inputs = np.reshape(inference_data, (1, inference_data.shape[0], inference_data.shape[1]))
+    #Print input timesteps
+    print("Giving the model the following timesteps:")
+    print(prediction_inputs)
+
+    # Print predicted timestep 
+    print("The next timestep values will be:")
+    print(model(prediction_inputs, initial_state = None)[0])
     pass
 
 
