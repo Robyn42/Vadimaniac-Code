@@ -4,6 +4,7 @@ from tensorflow.keras import Model
 from tensorflow.keras import layers 
 from tqdm import tqdm
 from functools import reduce
+import sys
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
@@ -186,6 +187,11 @@ def main():
     number_timesteps = 110
     epochs = 500
 
+    ngram_types = ['ngram_diff', 'ngram_basic']
+    if len(sys.argv) !=2 or sys.argv[1] not in ngram_types:
+        print('Usage is :python3 mlp_model_1.py [ngram_basic or ngram_diff]')
+        exit()
+
     # Load data using preprocess function.
     print('Loading data...')
     data = motion_forecasting_get_data()
@@ -213,8 +219,11 @@ def main():
     # Predict the 5th. 
     # Each timestep consisting of the features (eg. position_x, position_y, heading, velocity_x, velocity_y)
     # collectively is considered to be a 'token' or 'word' and the sequence is the sentence.
-    inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
-
+    
+    if sys.argv[1] == 'ngram_diff':
+        inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], np.subtract(data[i+3, 1:], data[i+4, 1:])] for i in range(data.shape[0] - 4)])
+    if sys.argv[1] == 'ngram_basic':
+        inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
     # Takes the last column and splits it off the data arrays into a seperate 
     # label array.
     inputs, true_values = np.hsplit(inputs_sequence, [-1])
