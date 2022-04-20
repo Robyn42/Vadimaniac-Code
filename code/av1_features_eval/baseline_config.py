@@ -1,26 +1,48 @@
 """This module defines all the config parameters."""
 
 FEATURE_FORMAT = {
-    "TIMESTAMP": 0,
-    "TRACK_ID": 1,
-    "OBJECT_TYPE": 2,
-    "X": 3,
-    "Y": 4,
-    "CITY_NAME": 5,
-    "MIN_DISTANCE_FRONT": 6,
-    "MIN_DISTANCE_BACK": 7,
-    "NUM_NEIGHBORS": 8,
-    "OFFSET_FROM_CENTERLINE": 9,
-    "DISTANCE_ALONG_CENTERLINE": 10,
+    'observed': 0,
+    'track_id': 1,
+    'object_type': 2,
+    'object_category': 3,
+    'timestep': 4,
+    'position_x': 5,
+    'position_y': 6,
+    'heading': 7,
+    'velocity_x': 8,
+    'velocity_y': 9,
+    'scenario_id': 10,
+    'start_timestamp': 11,
+    'end_timestamp': 12,
+    'num_timestamps': 13,
+    'focal_track_id': 14,
+    'city': 15,
+    # Below from social features computation
+    "MIN_DISTANCE_FRONT": 16,
+    "MIN_DISTANCE_BACK": 17,
+    "NUM_NEIGHBORS": 18,
+    # Below from Maps only
+    # "OFFSET_FROM_CENTERLINE": 9,
+    # "DISTANCE_ALONG_CENTERLINE": 10,
 }
 
 RAW_DATA_FORMAT = {
-    "TIMESTAMP": 0,
-    "TRACK_ID": 1,
-    "OBJECT_TYPE": 2,
-    "X": 3,
-    "Y": 4,
-    "CITY_NAME": 5,
+    'observed': 0,
+    'track_id': 1,
+    'object_type': 2,
+    'object_category': 3,
+    'timestep': 4,
+    'position_x': 5,
+    'position_y': 6,
+    'heading': 7,
+    'velocity_x': 8,
+    'velocity_y': 9,
+    'scenario_id': 10,
+    'start_timestamp': 11,
+    'end_timestamp': 12,
+    'num_timestamps': 13,
+    'focal_track_id': 14,
+    'city': 15
 }
 
 LSTM_HELPER_DICT_IDX = {

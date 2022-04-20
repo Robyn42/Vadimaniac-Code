@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from baseline_config import (
+from av1_features_eval.baseline_config import (
     PADDING_TYPE,
     STATIONARY_THRESHOLD,
     VELOCITY_THRESHOLD,
@@ -15,6 +15,8 @@ from baseline_config import (
     NEARBY_DISTANCE_THRESHOLD,
     FRONT_OR_BACK_OFFSET_THRESHOLD,
 )
+
+TIMESTAMP_COL = 'timestep'
 
 
 class SocialFeaturesUtils:
@@ -76,7 +78,7 @@ class SocialFeaturesUtils:
         filled_track = np.empty((0, track_array.shape[1]))
         for timestamp in seq_timestamps:
             filled_track = np.vstack((filled_track, track_array[curr_idx]))
-            if timestamp in track_array[:, raw_data_format["TIMESTAMP"]]:
+            if timestamp in track_array[:, raw_data_format[TIMESTAMP_COL]]:
                 curr_idx += 1
         return filled_track
 
@@ -99,7 +101,7 @@ class SocialFeaturesUtils:
 
         """
         track_vals = track_df.values
-        track_timestamps = track_df["TIMESTAMP"].values
+        track_timestamps = track_df[TIMESTAMP_COL].values
 
         # start and index of the track in the sequence
         start_idx = np.where(seq_timestamps == track_timestamps[0])[0][0]
@@ -134,18 +136,21 @@ class SocialFeaturesUtils:
         social_tracks = np.empty((0, obs_len, len(raw_data_format)))
 
         # Timestamps in the sequence
-        seq_timestamps = np.unique(seq_df["TIMESTAMP"].values)
+        seq_timestamps = np.unique(seq_df[TIMESTAMP_COL].values)
 
         # Track groups
-        df_groups = seq_df.groupby("TRACK_ID")
+        df_groups = seq_df.groupby("track_id")
         for group_name, group_data in df_groups:
 
             # Check if the track is long enough
             if len(group_data) < self.EXIST_THRESHOLD:
                 continue
 
+            # TODO: verify this change!
             # Skip if agent track
-            if group_data["OBJECT_TYPE"].iloc[0] == "AGENT":
+            # if group_data["object_id"].iloc[0] == "AGENT":
+            #     continue
+            if group_name == 'AV':
                 continue
 
             # Check if the track is stationary
@@ -179,14 +184,14 @@ class SocialFeaturesUtils:
         """
         # We don't have heading information. So we need at least 2 coordinates to determine that.
         # Here, front and back is determined wrt to last 2 coordinates of the track
-        x2 = track[-1, raw_data_format["X"]]
-        y2 = track[-1, raw_data_format["Y"]]
+        x2 = track[-1, raw_data_format["position_x"]]
+        y2 = track[-1, raw_data_format["position_y"]]
 
         # Keep taking previous coordinate until first distinct coordinate is found.
         idx1 = track.shape[0] - 2
         while idx1 > -1:
-            x1 = track[idx1, raw_data_format["X"]]
-            y1 = track[idx1, raw_data_format["Y"]]
+            x1 = track[idx1, raw_data_format["position_x"]]
+            y1 = track[idx1, raw_data_format["position_y"]]
             if x1 != x2 or y1 != y2:
                 break
             idx1 -= 1
@@ -205,15 +210,15 @@ class SocialFeaturesUtils:
         if proj_dist < FRONT_OR_BACK_OFFSET_THRESHOLD:
 
             dist_from_end_of_track = np.sqrt(
-                (track[-1, raw_data_format["X"]] - neigh_x)**2 +
-                (track[-1, raw_data_format["Y"]] - neigh_y)**2)
+                (track[-1, raw_data_format["position_x"]] - neigh_x)**2 +
+                (track[-1, raw_data_format["position_y"]] - neigh_y)**2)
             dist_from_start_of_track = np.sqrt(
-                (track[0, raw_data_format["X"]] - neigh_x)**2 +
-                (track[0, raw_data_format["Y"]] - neigh_y)**2)
-            dist_start_end = np.sqrt((track[-1, raw_data_format["X"]] -
-                                      track[0, raw_data_format["X"]])**2 +
-                                     (track[-1, raw_data_format["Y"]] -
-                                      track[0, raw_data_format["Y"]])**2)
+                (track[0, raw_data_format["position_x"]] - neigh_x)**2 +
+                (track[0, raw_data_format["position_y"]] - neigh_y)**2)
+            dist_start_end = np.sqrt((track[-1, raw_data_format["position_x"]] -
+                                      track[0, raw_data_format["position_x"]])**2 +
+                                     (track[-1, raw_data_format["position_y"]] -
+                                      track[0, raw_data_format["position_y"]])**2)
 
             return ("front"
                     if dist_from_end_of_track < dist_from_start_of_track
@@ -250,15 +255,15 @@ class SocialFeaturesUtils:
 
             # Agent coordinates
             agent_x, agent_y = (
-                agent_track[i, raw_data_format["X"]],
-                agent_track[i, raw_data_format["Y"]],
+                agent_track[i, raw_data_format["position_x"]],
+                agent_track[i, raw_data_format["position_y"]],
             )
 
             # Compute distances for all the social tracks
             for social_track in social_tracks[:, i, :]:
 
-                neigh_x = social_track[raw_data_format["X"]]
-                neigh_y = social_track[raw_data_format["Y"]]
+                neigh_x = social_track[raw_data_format["position_x"]]
+                neigh_y = social_track[raw_data_format["position_y"]]
                 if viz:
                     plt.scatter(neigh_x, neigh_y, color="green")
 
@@ -288,22 +293,22 @@ class SocialFeaturesUtils:
             if viz:
                 plt.scatter(agent_x, agent_y, color="red")
                 plt.text(
-                    agent_track[i, raw_data_format["X"]],
-                    agent_track[i, raw_data_format["Y"]],
+                    agent_track[i, raw_data_format["position_x"]],
+                    agent_track[i, raw_data_format["position_y"]],
                     "{0:.1f}".format(min_distance_front_and_back[i, 0]),
                     fontsize=5,
                 )
 
         if viz:
             plt.text(
-                agent_track[0, raw_data_format["X"]],
-                agent_track[0, raw_data_format["Y"]],
+                agent_track[0, raw_data_format["position_x"]],
+                agent_track[0, raw_data_format["position_y"]],
                 "s",
                 fontsize=12,
             )
             plt.text(
-                agent_track[-1, raw_data_format["X"]],
-                agent_track[-1, raw_data_format["Y"]],
+                agent_track[-1, raw_data_format["position_x"]],
+                agent_track[-1, raw_data_format["position_y"]],
                 "e",
                 fontsize=12,
             )
@@ -334,14 +339,14 @@ class SocialFeaturesUtils:
         for i in range(obs_len):
 
             agent_x, agent_y = (
-                agent_track[i, raw_data_format["X"]],
-                agent_track[i, raw_data_format["Y"]],
+                agent_track[i, raw_data_format["position_x"]],
+                agent_track[i, raw_data_format["position_y"]],
             )
 
             for social_track in social_tracks[:, i, :]:
 
-                neigh_x = social_track[raw_data_format["X"]]
-                neigh_y = social_track[raw_data_format["Y"]]
+                neigh_x = social_track[raw_data_format["position_x"]]
+                neigh_y = social_track[raw_data_format["position_y"]]
 
                 instant_distance = np.sqrt((agent_x - neigh_x)**2 +
                                            (agent_y - neigh_y)**2)
@@ -375,7 +380,7 @@ class SocialFeaturesUtils:
             social_features (numpy array): Social features for the agent track
 
         """
-        agent_ts = np.sort(np.unique(df["TIMESTAMP"].values))
+        agent_ts = np.sort(np.unique(df[TIMESTAMP_COL].values))
 
         if agent_ts.shape[0] == obs_len:
             df_obs = df
@@ -383,8 +388,8 @@ class SocialFeaturesUtils:
 
         else:
             # Get obs dataframe and agent track
-            df_obs = df[df["TIMESTAMP"] < agent_ts[obs_len]]
-            assert (np.unique(df_obs["TIMESTAMP"].values).shape[0] == obs_len
+            df_obs = df[df[TIMESTAMP_COL] < agent_ts[obs_len]]
+            assert (np.unique(df_obs[TIMESTAMP_COL].values).shape[0] == obs_len
                     ), "Obs len mismatch"
             agent_track_obs = agent_track[:obs_len]
 
