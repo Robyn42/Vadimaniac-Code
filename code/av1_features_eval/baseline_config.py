@@ -57,27 +57,6 @@ LSTM_HELPER_DICT_IDX = {
     "SEQ_PATHS": 8,
 }
 
-BASELINE_INPUT_FEATURES = {
-    "social":
-    ["X", "Y", "MIN_DISTANCE_FRONT", "MIN_DISTANCE_BACK", "NUM_NEIGHBORS"],
-    "map": ["OFFSET_FROM_CENTERLINE", "DISTANCE_ALONG_CENTERLINE"],
-    "map_social": [
-        "OFFSET_FROM_CENTERLINE",
-        "DISTANCE_ALONG_CENTERLINE",
-        "MIN_DISTANCE_FRONT",
-        "MIN_DISTANCE_BACK",
-        "NUM_NEIGHBORS",
-    ],
-    "none": ["X", "Y"],
-}
-
-BASELINE_OUTPUT_FEATURES = {
-    "social": ["X", "Y"],
-    "map": ["OFFSET_FROM_CENTERLINE", "DISTANCE_ALONG_CENTERLINE"],
-    "map_social": ["OFFSET_FROM_CENTERLINE", "DISTANCE_ALONG_CENTERLINE"],
-    "none": ["X", "Y"],
-}
-
 # Feature computation
 _FEATURES_SMALL_SIZE = 100
 
