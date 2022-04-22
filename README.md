@@ -2,6 +2,9 @@
 # Vadimaniac-Code
 Repository for Vadimaniacs' Heresy's project code
 
+Some elements of the model and preprocess layout and interconnectivity were inspired by the 
+homework and lab assignments for CS2470 - Deep Learning at Brown University. 
+
 I added the create_venv.sh we use for class along with an updated requirements.txt.
 The requirements.txt adds the pyarrow library to a virtual environment. 
 Pyarrow is used to open the parquet and feather files in the Argoverse2 download. 
@@ -18,7 +21,10 @@ After the model trains, it outputs a prediction for the
 values of all the features in the next timestap. There is a prechosen timeseries 
 that the prediction is based on that prints just ahead of the prediction.
 
-There is a visualizatoin of the training loss per batch as well.
+There is a visualizatoin of the training loss per batch.
+
+Logging of some of the model infomation and performance was added. The 
+log file for this model is mlp_model_1.log.
 
 Switching the data input into the model to an '5-gram' layout greatly improved the 
 testing loss. I corrected an error in the processing where the data was not being properly 

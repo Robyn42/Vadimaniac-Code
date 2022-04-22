@@ -5,6 +5,8 @@ from tensorflow.keras import layers
 from tqdm import tqdm
 from functools import reduce
 import sys
+import os
+import datetime
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
@@ -164,14 +166,64 @@ def visualize_loss(losses):
     return: plot
     '''
 
-    batches = np.arange(1, len(losses) + 1)
+    epochs = np.arange(1, len(losses) + 1)
     plt.title('Loss per batch')
-    plt.xlabel('batch #')
+    plt.xlabel('epoch #')
     plt.ylabel('Loss value')
-    plt.plot(batches, losses)
+    plt.plot(epochs, losses)
     plt.show()
 
     pass
+
+def results_logging(epochs, ngram_type_selected, losses, training_loss, testing_loss, prediction_inputs, prediction):
+    '''
+    Creates a log of the model's output including the number of epochs,
+    the testing, and training loss.
+
+    param epochs: The number of epochs for model run. 
+    param ngram_type_selected: A 'basic' or 'difference' target value.
+    param training_loss: This is the mean batch loss over epochs.
+    param testing_loss: The final testing loss value.
+    param prediction_inputs:
+    param prediction:
+    
+    returns: None - information is added to existing log file.
+    '''
+
+    now = datetime.datetime.now()
+    # If log file exists, append to it.
+    if os.path.exists('mlp_model_1.log'):
+        with open('mlp_model_1.log', 'a') as log:
+            log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
+            log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'The n-gram format is: {ngram_type_selected}')
+            log.write('\n' f'Loss for each epoch: {losses}')
+            log.write('\n' f'Mean Training loss: {training_loss}')
+            log.write('\n' f'Mean Testing loss: {testing_loss}')
+            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            log.write('\n' f'{prediction_inputs}')
+            log.write('\n' f'This is the predicted next timestep values:')
+            log.write('\n' f'{prediction}')
+            log.write('\n')
+            log.write(f'-'*80)
+    else:
+        # If log file does not exist, create it.
+        with open('mlp_model_1.log', 'w') as log:
+            log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
+            log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'The n-gram format is: {ngram_type_selected}')
+            log.write('\n' f'Loss for each epoch: {losses}')
+            log.write('\n' f'Mean Training loss: {training_loss}')
+            log.write('\n' f'Mean Testing loss: {testing_loss}')
+            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            log.write('\n' f'{prediction_inputs}')
+            log.write('\n' f'This is the predicted next timestep values:')
+            log.write('\n' f'{prediction}')
+            log.write('\n')
+            log.write(f'-'*80)
+
+    return None
+
 
 def main():
     '''
@@ -191,7 +243,7 @@ def main():
     if len(sys.argv) !=2 or sys.argv[1] not in ngram_types:
         print('Usage is :python3 mlp_model_1.py [ngram_basic or ngram_diff]')
         exit()
-
+    ngram_type_selected = sys.argv[1]
     # Load data using preprocess function.
     print('Loading data...')
     data = motion_forecasting_get_data()
@@ -220,9 +272,9 @@ def main():
     # Each timestep consisting of the features (eg. position_x, position_y, heading, velocity_x, velocity_y)
     # collectively is considered to be a 'token' or 'word' and the sequence is the sentence.
     
-    if sys.argv[1] == 'ngram_diff':
+    if ngram_type_selected == 'ngram_diff':
         inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], np.subtract(data[i+3, 1:], data[i+4, 1:])] for i in range(data.shape[0] - 4)])
-    if sys.argv[1] == 'ngram_basic':
+    if ngram_type_selected == 'ngram_basic':
         inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
     # Takes the last column and splits it off the data arrays into a seperate 
     # label array.
@@ -261,7 +313,9 @@ def main():
 
     visualize_loss(losses)
     # Test model. Print the average testing loss.
-    print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+    #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+    testing_loss = test(model, test_inputs, test_true_values)
+    print(f"The model's average testing loss is: {testing_loss}")
 
     #print("Saving model...")
     #tf.saved_model.save(model, "./saved_MLP_Forecasting_Model")
@@ -274,13 +328,17 @@ def main():
     inference_dim = inference_data.shape[0] * inference_data.shape[1]
     prediction_inputs = np.reshape(inference_data, (1, inference_dim))
     #Print input timesteps
-    print("Giving the model the following timesteps:")
+    print("These are the timesteps given to the model for inference prediction")
     print(prediction_inputs)
 
     # Print predicted timestep 
     print("The next timestep values will be:")
-    print(model(prediction_inputs))
+    prediction = model(prediction_inputs)
+    print(prediction)
 
+    # Log model information and results
+    training_loss = tf.reduce_mean(losses)
+    results_logging(epochs, ngram_type_selected, losses, training_loss, testing_loss, prediction_inputs, prediction)
     pass
 
 
