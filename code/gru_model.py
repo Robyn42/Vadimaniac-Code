@@ -4,6 +4,9 @@ from tensorflow.keras import Model
 from tensorflow.keras import layers 
 from tqdm import tqdm
 from functools import reduce
+import sys
+import os
+import datetime
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
@@ -212,17 +215,63 @@ def visualize_loss(losses):
     Outputs a plot of the losses over all batches and epochs.
 
     params losses: array of loss values.
-    return: plot
+    return: None - displays plot
     '''
 
-    batches = np.arange(1, len(losses) + 1)
-    plt.title('Loss per batch')
-    plt.xlabel('batch #')
+    epochs = np.arange(1, len(losses) + 1)
+    plt.title('Loss per epoch')
+    plt.xlabel('epoch #')
     plt.ylabel('Loss value')
-    plt.plot(batches, losses)
+    plt.plot(epochs, losses)
     plt.show()
 
-    pass
+    return None
+
+def results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction):
+    '''
+    Creates a log of the model's output including the number of epochs,
+    the testing, and training loss.
+
+    param epochs: The number of epochs for model run.
+    param training_loss: This is the mean batch loss over epochs.
+    param testing_loss: The final testing loss value.
+    param prediction_inputs:
+    param prediction:
+    
+    returns: None - information is added to existing log file.
+    '''
+
+    now = datetime.datetime.now()
+    # If log file exists, append to it.
+    if os.path.exists('gru_model.log'):
+        with open('gru_model.log', 'a') as log:
+            log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
+            log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'Loss for each epoch: {losses}')
+            log.write('\n' f'Mean Training loss: {training_loss}')
+            log.write('\n' f'Mean Testing loss: {testing_loss}')
+            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            log.write('\n' f'{prediction_inputs}')
+            log.write('\n' f'This is the predicted next timestep values:')
+            log.write('\n' f'{prediction}')
+            log.write('\n')
+            log.write(f'-'*80)
+    else:
+        # If log file does not exist, create it.
+        with open('gru_model.log', 'w') as log:
+            log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
+            log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'Loss for each epoch: {losses}')
+            log.write('\n' f'Mean Training loss: {training_loss}')
+            log.write('\n' f'Mean Testing loss: {testing_loss}')
+            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            log.write('\n' f'{prediction_inputs}')
+            log.write('\n' f'This is the predicted next timestep values:')
+            log.write('\n' f'{prediction}')
+            log.write('\n')
+            log.write(f'-'*80)
+
+    return None
 
 def main():
     '''
@@ -239,7 +288,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 5000
+    epochs = 3000
 
     # Load data using preprocess function.
     print('Loading data...')
@@ -281,7 +330,9 @@ def main():
 
     # Test model. Print the average testing loss.
     print('Model testing ...')
-    print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+    #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+    testing_loss = test(model, test_inputs, test_true_values)
+    print(f"The model's average testing loss is: {testing_loss}")
 
     #print("Saving model...")
     #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model")
@@ -299,7 +350,13 @@ def main():
 
     # Print predicted timestep 
     print("The next timestep values will be:")
-    print(model(prediction_inputs, initial_state = None)[0])
+    prediction = model(prediction_inputs, initial_state = None)[0]
+    print(prediction)
+
+    # Log model information and results
+    training_loss = tf.reduce_mean(losses)
+    results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction)
+
     pass
 
 

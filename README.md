@@ -40,6 +40,8 @@ visualization for the batch loss on this one. The training loss decreases
 very smoothly before 1000 epochs. There may be overfitting though since the 
 test loss is fairly high to start but stabalizes after 1000 epochs as well.
 
+This model also has logging functionality. The log name is gru_model.log.
+
 The model presents a prediction of the next timestep just as the mlp mpdel does.
 There is a difference in the way the prediction is displayed though. It appears as though some
 recent revisions of the keras LSTM and GRU models do not give the user the ability 
