@@ -30,7 +30,7 @@ def compile_dataset(dataset, dataset_dir, feature_dir):
         # Incorporating the social features computation and combination with parquet file data here.
         #compute_and_save(dataset, dataset_dir, feature_dir)
         print(f'Files are not available. Computing features...')
-        compute_and_save()
+        compute_and_save(dataset, dataset_dir, feature_dir)
 
     # Computation has been done.
     dir = feature_dir
