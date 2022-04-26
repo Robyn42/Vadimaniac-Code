@@ -29,7 +29,7 @@ class GRU_Forecasting_Model(tf.keras.Model):
         self.batch_size = 100
         self.window_size = 10
         self.dense_size = 100
-        self.output_size = 5 # The number of features per timestep.
+        self.output_size = 8 # The number of features per timestep.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.leaky_relu_alpha = 3e-1
@@ -123,6 +123,8 @@ def train(model, train_inputs, train_true_values):
     train_inputs = train_inputs[:-train_timesteps_removed]
     train_true_values = train_true_values[:-train_timesteps_removed]
 
+    #print(train_inputs.shape)
+    #print(train_true_values.shape)
     # Reshape inputs and true_values by window_size. The final 
     # shape should match (batch_size, window_size, output_size)
     train_inputs = tf.reshape(train_inputs, [(train_inputs.shape[0] // model.window_size), model.window_size, model.output_size]) 
@@ -292,27 +294,40 @@ def main():
 
     # Load data using preprocess function.
     print('Loading data...')
-    data = motion_forecasting_get_data()
+    #data = motion_forecasting_get_data()
+    # Data is now introduced to the model as three arrays for train, validation and test.
+    train_data, validation_data, test_data = motion_forecasting_get_data()
 
     # The data is in the shape (number of examples, number of features).
     
     print('Preparing data...')
+    ## NOTE: The splitting of the data as below to create train and test data is not 
+    ## Being used at this time since the preprocess now returns the 3 arrays.
+
     # Split the data into train and test with roughly a 70% train, 30% test split.
     # This also removes the 'timestep' feature column.
-    split = np.floor(data.shape[0]*0.70).astype(np.int32)
+    #split = np.floor(data.shape[0]*0.70).astype(np.int32)
 
-    train_inputs = data[:split, 1:]
-    train_true_values = data[:split, 1:]
-    test_inputs = data[:split, 1:]
-    test_true_values = data[:split, 1:]
+    #train_inputs = data[:split, 1:]
+    #train_true_values = data[:split, 1:]
+    #test_inputs = data[:split, 1:]
+    #test_true_values = data[:split, 1:]
+
 
     # Remove the last timestep of the inputs
-    train_inputs = train_inputs[:-1]
-    test_inputs = test_inputs[:-1]
+    #train_inputs = train_inputs[:-1]
+    #test_inputs = test_inputs[:-1]
 
+    train_inputs = train_data[:-1, 1:]
+    test_inputs = test_data[:-1, 1:]
+    #print(train_inputs.shape)
+    #print(test_inputs.shape)
     # Remove the first timestep of the true_values
-    train_true_values = train_true_values[1:]
-    test_true_values = test_true_values[1:]
+    #train_true_values = train_true_values[1:]
+    #test_true_values = test_true_values[1:]
+
+    train_true_values = train_data[1:, 1:]
+    test_true_values = test_data[1:, 1:]
 
     # Initialize the model
     model = GRU_Forecasting_Model()
@@ -340,7 +355,7 @@ def main():
 
     # Select a sequence from the data for prediction.
     # Again not including the "timesteps" column as in the dataset above.
-    inference_data = data[:10, 1:]
+    inference_data = test_data[:10, 1:]
     # Flatten timesteps as above
     #inference_dim = inference_data.shape[0] * inference_data.shape[1]
     prediction_inputs = np.reshape(inference_data, (1, inference_data.shape[0], inference_data.shape[1]))
