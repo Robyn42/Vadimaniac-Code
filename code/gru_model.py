@@ -292,66 +292,91 @@ def main():
     number_timesteps = 110
     epochs = 3000
 
-    # Load data using preprocess function.
-    print('Loading data...')
-    #data = motion_forecasting_get_data()
-    # Data is now introduced to the model as three arrays for train, validation and test.
-    train_data, validation_data, test_data = motion_forecasting_get_data()
+    arg_options = ['train_model', 'load_weights']
+    if len(sys.argv) !=2 or sys.argv[1] not in arg_options:
+        print('Usage is :python3 gru_model.py [train_model or load_weights]')
+        exit()
 
-    # The data is in the shape (number of examples, number of features).
+
+    # The script_state is if the model should be retrained or instead the weights loaded.
+    script_state = sys.argv[1]
+
+    if script_state == 'train_model': 
+        # Load data using preprocess function.
+        print('Loading data...')
+        #data = motion_forecasting_get_data()
+        # Data is now introduced to the model as three arrays for train, validation and test.
+        train_data, validation_data, test_data = motion_forecasting_get_data()
+
+        # The data is in the shape (number of examples, number of features).
     
-    print('Preparing data...')
-    ## NOTE: The splitting of the data as below to create train and test data is not 
-    ## Being used at this time since the preprocess now returns the 3 arrays.
+        print('Preparing data...')
+        ## NOTE: The splitting of the data as below to create train and test data is not 
+        ## Being used at this time since the preprocess now returns the 3 arrays.
 
-    # Split the data into train and test with roughly a 70% train, 30% test split.
-    # This also removes the 'timestep' feature column.
-    #split = np.floor(data.shape[0]*0.70).astype(np.int32)
+        # Split the data into train and test with roughly a 70% train, 30% test split.
+        # This also removes the 'timestep' feature column.
+        #split = np.floor(data.shape[0]*0.70).astype(np.int32)
 
-    #train_inputs = data[:split, 1:]
-    #train_true_values = data[:split, 1:]
-    #test_inputs = data[:split, 1:]
-    #test_true_values = data[:split, 1:]
+        #train_inputs = data[:split, 1:]
+        #train_true_values = data[:split, 1:]
+        #test_inputs = data[:split, 1:]
+        #test_true_values = data[:split, 1:]
 
 
-    # Remove the last timestep of the inputs
-    #train_inputs = train_inputs[:-1]
-    #test_inputs = test_inputs[:-1]
+        # Remove the last timestep of the inputs
+        #train_inputs = train_inputs[:-1]
+        #test_inputs = test_inputs[:-1]
+        # This also removes the 'timestep' feature column.
+        train_inputs = train_data[:-1, 1:]
+        test_inputs = test_data[:-1, 1:]
+        #print(train_inputs.shape)
+        #print(test_inputs.shape)
+        # Remove the first timestep of the true_values
+        #train_true_values = train_true_values[1:]
+        #test_true_values = test_true_values[1:]
+        # This also removes the 'timestep' feature column.
+        train_true_values = train_data[1:, 1:]
+        test_true_values = test_data[1:, 1:]
 
-    train_inputs = train_data[:-1, 1:]
-    test_inputs = test_data[:-1, 1:]
-    #print(train_inputs.shape)
-    #print(test_inputs.shape)
-    # Remove the first timestep of the true_values
-    #train_true_values = train_true_values[1:]
-    #test_true_values = test_true_values[1:]
+        # Initialize the model
+        model = GRU_Forecasting_Model()
 
-    train_true_values = train_data[1:, 1:]
-    test_true_values = test_data[1:, 1:]
-
-    # Initialize the model
-    model = GRU_Forecasting_Model()
-
-    # Train model for a number of epochs.
-    print('Model training ...')
+        # Train model for a number of epochs.
+        print('Model training ...')
  
-    # List to hold loss values per epoch
-    losses = []
+        # List to hold loss values per epoch
+        losses = []
 
-    for i in tqdm(range(epochs)):
-        losses.append(train(model, train_inputs, train_true_values))
+        for i in tqdm(range(epochs)):
+            losses.append(train(model, train_inputs, train_true_values))
 
-    visualize_loss(losses)
+        visualize_loss(losses)
+        training_loss = tf.reduce_mean(losses)
 
-    # Test model. Print the average testing loss.
-    print('Model testing ...')
-    #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
-    testing_loss = test(model, test_inputs, test_true_values)
-    print(f"The model's average testing loss is: {testing_loss}")
+        # Test model. Print the average testing loss.
+        print('Model testing ...')
+        #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+        testing_loss = test(model, test_inputs, test_true_values)
+        print(f"The model's average testing loss is: {testing_loss}")
 
-    #print("Saving model...")
-    #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model")
-    #print("Model saved!")
+        # Save model weights
+        print("Saving model...")
+        #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
+        model.save_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights", overwrite=True)
+        print("Model saved!")
+    
+    else:
+        print('Loading model weights...')
+        model = GRU_Forecasting_Model()
+        model.load_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights")
+        print('Model weights loaded...')
+        train_data, validation_data, test_data = motion_forecasting_get_data()
+        epochs = 'None'
+        losses = 'None'
+        training_loss = 'None'
+        testing_loss = 'None'
+        
 
     # Select a sequence from the data for prediction.
     # Again not including the "timesteps" column as in the dataset above.
@@ -369,11 +394,18 @@ def main():
     print(prediction)
 
     # Log model information and results
-    training_loss = tf.reduce_mean(losses)
+    #training_loss = tf.reduce_mean(losses)
     results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction)
+
+    # Save model weights
+    #print("Saving model...")
+    #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
+    #model.save_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights", overwrite=False)
+    #print("Model saved!")
 
     pass
 
 
 if __name__ == '__main__':
     main()
+
