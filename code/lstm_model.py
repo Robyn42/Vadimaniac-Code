@@ -26,7 +26,7 @@ class LSTM_Forecasting_Model(tf.keras.Model):
         #super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
-        self.batch_size = 10
+        self.batch_size = 100
         self.window_size = 10
         self.dense_size = 110
         self.output_size = 8 # The number of output features per timestep.
