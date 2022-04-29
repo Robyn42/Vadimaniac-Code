@@ -11,6 +11,8 @@ Pyarrow is used to open the parquet and feather files in the Argoverse2 download
 
 The preprocess.py may be usable with many different types of models.
 
+The three current models include visualization for loss per epoch.
+
 There is a stacked LSTM model (lstm_model.py) that was inspired by the LSTM used as a baseline
 by the Argoverse 1 team. This version uses two LSTM modules with three dense layers following.
 The first LSTM module passes it's output and final state to the respective inputs of 
@@ -27,7 +29,6 @@ After the model trains, it outputs a prediction for the
 values of all the features in the next timestap. There is a prechosen timeseries 
 that the prediction is based on that prints just ahead of the prediction.
 
-There is a visualizatoin of the training loss per batch.
 
 Logging of some of the model infomation and performance was added. The 
 log file for this model is mlp_model_1.log.
