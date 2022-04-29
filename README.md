@@ -5,13 +5,19 @@ Repository for Vadimaniacs' Heresy's project code
 Some elements of the model and preprocess layout and interconnectivity were inspired by the 
 homework and lab assignments for CS2470 - Deep Learning at Brown University. 
 
-I added the create_venv.sh we use for class along with an updated requirements.txt.
+A create_venv.sh script is present along with an updated requirements.txt.
 The requirements.txt adds the pyarrow library to a virtual environment. 
 Pyarrow is used to open the parquet and feather files in the Argoverse2 download. 
 
 The preprocess.py may be usable with many different types of models.
 
-The mlp_model_1.py model is a very basic 2 layer mlp that predicts 5 of the features that were
+There is a stacked LSTM model (lstm_model.py) that was inspired by the LSTM used as a baseline
+by the Argoverse 1 team. This version uses two LSTM modules with three dense layers following.
+The first LSTM module passes it's output and final state to the respective inputs of 
+the second. It's log is stored as lstm_model.log.
+
+
+The mlp_model_1.py model is a two layer mlp that predicts 8 of the features that were
 chosen in the preprocess.py code. To use this model add either ngram_basic
 or ngram_diff after mlp_model_1.py. The basic version is a '5-gram' format version. The 
 'diff' version creates the true values of the '5-gram' by taking the differences 
