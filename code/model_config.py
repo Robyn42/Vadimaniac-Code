@@ -9,3 +9,5 @@ OUTPUT_FEATURES = {
     "social": ["position_x", "position_y"],
     "none": ["position_x", "position_y"],
 }
+
+OBS_LEN, PRED_LEN = 80, 30
