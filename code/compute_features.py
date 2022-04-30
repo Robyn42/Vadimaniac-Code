@@ -6,9 +6,11 @@ from av1_features_eval.baseline_config import RAW_DATA_FORMAT, FEATURE_FORMAT
 from av1_features_eval.social_features_utils import SocialFeaturesUtils
 
 # Parameters for use in feature computation
-feature_params = {'obs_len': 80, # Observed length of the trajectory
+feature_params = {'obs_len': 110, # Observed length of the trajectory
+                  #'obs_len': 80, # Observed length of the trajectory
                   # in Argverse 1, we have obs_len = 20
-                  "pred_len": 30 # Prediction Horizon
+                  #"pred_len": 30 # Prediction Horizon
+                  "pred_len": 0 # Prediction Horizon
                   }
 
 
@@ -53,31 +55,41 @@ def compute_features(
     return merged_features
 
 
-def produce_files():
+def produce_files(dataset_dir):
     """
     Produce all file names used in feature computation.
+
+    param dataset_dir: The location of the train, validation or test .parquet files.
     """
-    dir = '../../argoverse_2_data/motion_forecasting/val/'
+    #dir = '../argoverse_2_data/motion_forecasting/val/'
+    dir = dataset_dir
     for root, dirs, files in os.walk(dir):
         for name in files:
             if os.path.splitext(name)[-1] == '.parquet':
                 yield os.path.join(root, name)
 
 
-def compute_and_save():
+def compute_and_save(dataset, dataset_dir, feature_dir):
     """
     Run feature computation and save to a directory at the same level as the project code.
+    
+    param dataset: The dataset being processed. Train, validataion or test.
+    param dataset_dir: The location of dataset .parquet files.
+    param feature_dir: The location where computed (.csv) files should be saved.
     """
     social_features_utils_instance = SocialFeaturesUtils()
 
     # Hard coded directory while each .parquet file corresponds to a scenario.
-    res_dir = '../../features/val/'
+    #res_dir = '../features/val/'
+    # Directory where each .parquet file corresponds to a scenario taken as an 
+    # argument. 
+    res_dir = feature_dir
 
     start = time.time()
 
     i = 0
-    for fpath in produce_files():
-        
+    # for fpath in produce_files():
+    for fpath in produce_files(dataset_dir):
         fname, _ = os.path.basename(fpath).split('.')
         merged_features = compute_features(fpath,
                                            social_features_utils_instance)

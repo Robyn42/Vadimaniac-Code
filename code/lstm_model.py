@@ -10,11 +10,11 @@ import datetime
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 
-class GRU_Forecasting_Model(tf.keras.Model):
+class LSTM_Forecasting_Model(tf.keras.Model):
     def __init__(self):
 
         '''
-        The Model is a GRU version of a RNN for predicting
+        The Model is a LSTM version of a RNN for predicting
         the next set of variables for a timestep from the 
         Argoverse 2 motion-forecasting dataset.
 
@@ -22,28 +22,34 @@ class GRU_Forecasting_Model(tf.keras.Model):
         variables so MSE is used for the loss 
         calculation.
         '''
-        super(GRU_Forecasting_Model, self).__init__()
+        super(LSTM_Forecasting_Model, self).__init__()
         #super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
         self.batch_size = 100
         self.window_size = 10
-        self.dense_size = 100
-        self.output_size = 8 # The number of features per timestep.
+        self.dense_size = 110
+        self.output_size = 8 # The number of output features per timestep.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.leaky_relu_alpha = 3e-1
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
-        self.loss = tf.keras.losses.MeanSquaredError(name = "MSE Loss")
-
+        self.mse_loss = tf.keras.losses.MeanSquaredError(name = "MSE Loss")
+        self.leaky_relu = tf.keras.layers.LeakyReLU(alpha = self.leaky_relu_alpha)
         # Initialize model layers.
-        self.GRU = tf.keras.layers.GRU(units = self.window_size, return_sequences = True, return_state = True)
-        self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = 'LeakyReLU')
-        # No activation on the output layer.
-        self.dense_2 = tf.keras.layers.Dense(self.output_size)
+        self.LSTM_module_1 = tf.keras.layers.LSTM(units = self.window_size, return_sequences = True, return_state = True)
+        #self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
+        #self.dense_2 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         # Using activation defined on the layer above not seperate.
         #self.relu = tf.keras.layers.LeakyReLU(alpha = self.leaky_relu_alpha)
+        
         self.Dropout = tf.keras.layers.Dropout(rate = self.dropout_rate)
+
+        self.LSTM_module_2 = tf.keras.layers.LSTM(units = self.window_size, return_sequences = True, return_state = True)
+        self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
+        self.dense_2 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
+        # No activation on the output layer.
+        self.dense_3 = tf.keras.layers.Dense(self.output_size)
 
     def call(self, inputs, initial_state, model_testing = False):
         '''
@@ -56,33 +62,42 @@ class GRU_Forecasting_Model(tf.keras.Model):
         return: predicted values for 'position_x', 'position_y', 'heading',
         'velocity_x', and 'velocity_y' and the final_state of the GRU module.
         '''
-
-        #embed_lookup = tf.nn.embedding_lookup(self.embedding, inputs, name = "Embedding_Layer")
-
+        
         if model_testing == True:
             # No dropout layer for testing.
-            output_1 = self.GRU(inputs = inputs, initial_state = initial_state)
-            output_2 = self.dense_1(output_1[0])
+            output_1 = self.LSTM_module_1(inputs = inputs, initial_state = initial_state)
+            #output_2 = self.dense_1(output_1[0])
             #output_2 = self.relu(output_2)
-            predictions = self.dense_2(output_2)
-            # Taking the second output returned from the GRU layer as the 
+            #output_3 = self.dense_2(output_2)
+            LSTM_module_1_final_state = [output_1[1], output_1[2]]
+
+            output_2 = self.LSTM_module_2(inputs = output_1[0], initial_state = LSTM_module_1_final_state)
+            output_3 = self.dense_1(inputs = output_2[0])
+            output_4 = self.dense_2(inputs = output_3) 
+            predictions = self.dense_3(inputs = output_4)
+
+            # Taking the second and third outputs returned from the LSTM layer as the 
             # final state.
-            final_state = output_1[1]
+            final_state = [output_2[1], output_2[2]]
         
         else:
-            output_1 = self.GRU(inputs = inputs, initial_state = initial_state)
-            output_2 = self.dense_1(output_1[0])
-            #output_2 = self.relu(output_2)
-            output_2 = self.Dropout(output_2)
-            predictions = self.dense_2(output_2)
-            # Taking the second output returned from the GRU layer as the 
+            output_1 = self.LSTM_module_1(inputs = inputs, initial_state = initial_state)
+            LSTM_module_1_final_state = [output_1[1], output_1[2]]
+
+            output_2 = self.LSTM_module_2(inputs = output_1[0], initial_state = LSTM_module_1_final_state)
+            output_3 = self.dense_1(inputs = output_2[0])
+            output_4 = self.Dropout(inputs = output_3)
+            output_5 = self.dense_2(inputs = output_4)
+            output_6 = self.Dropout(inputs = output_5)
+            predictions = self.dense_3(output_6)
+            # Taking the second and third output returned from the LSTM layer as the 
             # final state.
-            final_state = output_1[1]
+            final_state = [output_2[1], output_2[2]]
 
         return predictions, final_state
 
 
-    def loss(self, true_values, predictions):
+    def loss_function(self, true_values, predictions):
         '''
         Calculates the average loss per batch after forward pass through 
         the model.
@@ -90,8 +105,8 @@ class GRU_Forecasting_Model(tf.keras.Model):
         param predictions: matrix of model predictions with 
         shape (batch_size, output_size)
         '''
-    
-        loss = self.loss(true_values, predictions)
+         
+        loss = self.mse_loss(true_values, predictions)
 
         # I believe that the keras loss layer used already
         # computes the reduced value. This is here if needed.
@@ -132,7 +147,7 @@ def train(model, train_inputs, train_true_values):
 
     # Array to hold batch loss values
     batch_loss = np.empty(shape = [train_inputs.shape[0]//model.batch_size])
-
+    
     # Set the initial_state of the model for the first run
     # of the call in the for loop below.
     initial_state = None
@@ -150,22 +165,21 @@ def train(model, train_inputs, train_true_values):
             # The output of the model needs to be reshaped as above to match the 
             # training_values before going into the loss calculation.
             forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
-            loss = model.loss(training_true_values, forward_pass_pred)
+            loss = model.loss_function(training_true_values, forward_pass_pred)
         # Optimize
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
         # Collect loss for the batch. 
+
         batch_loss[i] = loss
         # Update the initial_state for the next batch with the 
         # final_state of the previous one.
-        initial_state = forward_pass[1]
+        #initial_state = [forward_pass[1], forward_pass[2]]
 
     #Calculate loss over all training examples
     training_loss = tf.reduce_mean(batch_loss)
-
+    
     return training_loss
-
-
 
 
 def test(model, test_inputs, test_true_values):
@@ -204,7 +218,7 @@ def test(model, test_inputs, test_true_values):
 
         forward_pass = model.call(testing_inputs, initial_state, model_testing = True)
         forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
-        batch_loss[i] = model.loss(testing_true_values, forward_pass_pred)
+        batch_loss[i] = model.loss_function(testing_true_values, forward_pass_pred)
 
     #Calculate loss over all testing examples
     testing_loss = tf.reduce_mean(batch_loss)
@@ -245,8 +259,8 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
 
     now = datetime.datetime.now()
     # If log file exists, append to it.
-    if os.path.exists('gru_model.log'):
-        with open('gru_model.log', 'a') as log:
+    if os.path.exists('lstm_model.log'):
+        with open('lstm_model.log', 'a') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
             log.write('\n' f'Loss for each epoch: {losses}')
@@ -260,7 +274,7 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
             log.write(f'-'*80)
     else:
         # If log file does not exist, create it.
-        with open('gru_model.log', 'w') as log:
+        with open('lstm_model.log', 'w') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
             log.write('\n' f'Loss for each epoch: {losses}')
@@ -280,7 +294,8 @@ def main():
     Main function.
     
     The data is currently composed of 11 second sequences at 10Hz so there are 110 timesteps
-    per sequence.
+    per sequence. The sequences are for the main agent of the scenario resulting from our 
+    computation of social features.
 
     The model is attempting to predict the next set of features (position_x, position_y, etc.)
     at each timestep.
@@ -294,7 +309,7 @@ def main():
 
     arg_options = ['train_model', 'load_weights']
     if len(sys.argv) !=2 or sys.argv[1] not in arg_options:
-        print('Usage is :python3 gru_model.py [train_model or load_weights]')
+        print('Usage is :python3 lstm_model.py [train_model or load_weights]')
         exit()
 
 
@@ -340,10 +355,10 @@ def main():
         test_true_values = test_data[1:, 1:]
 
         # Initialize the model
-        model = GRU_Forecasting_Model()
+        model = LSTM_Forecasting_Model()
 
         # Train model for a number of epochs.
-        print('Model training ...')
+        print('LSTM Motion Forecasting Model training ...')
  
         # List to hold loss values per epoch
         losses = []
@@ -355,7 +370,7 @@ def main():
         training_loss = tf.reduce_mean(losses)
 
         # Test model. Print the average testing loss.
-        print('Model testing ...')
+        print('LSTM Motion Forecasting Model testing ...')
         #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
         testing_loss = test(model, test_inputs, test_true_values)
         print(f"The model's average testing loss is: {testing_loss}")
@@ -363,13 +378,13 @@ def main():
         # Save model weights
         print("Saving model...")
         #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
-        model.save_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights", overwrite=True)
-        print("Model saved!")
+        model.save_weights("./saved_LSTM_Forecasting_Model_weights/LSTM_weights", overwrite=True)
+        print("LSTM Model weights saved!")
     
     else:
         print('Loading model weights...')
-        model = GRU_Forecasting_Model()
-        model.load_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights")
+        model = LSTM_Forecasting_Model()
+        model.load_weights("./saved_LSTM_Forecasting_Model_weights/LSTM_weights")
         print('Model weights loaded...')
         train_data, validation_data, test_data = motion_forecasting_get_data()
         epochs = 'None'
@@ -397,12 +412,7 @@ def main():
     #training_loss = tf.reduce_mean(losses)
     results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction)
 
-    # Save model weights
-    #print("Saving model...")
-    #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
-    #model.save_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights", overwrite=False)
-    #print("Model saved!")
-
+    
     pass
 
 
