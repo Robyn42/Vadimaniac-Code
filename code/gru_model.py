@@ -33,12 +33,13 @@ class GRU_Forecasting_Model(tf.keras.Model):
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.leaky_relu_alpha = 3e-1
+        self.leaky_relu = tf.keras.layers.LeakyReLU(alpha = self.leaky_relu_alpha)
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         self.loss = tf.keras.losses.MeanSquaredError(name = "MSE Loss")
 
         # Initialize model layers.
         self.GRU = tf.keras.layers.GRU(units = self.window_size, return_sequences = True, return_state = True)
-        self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = 'LeakyReLU')
+        self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         # No activation on the output layer.
         self.dense_2 = tf.keras.layers.Dense(self.output_size)
         # Using activation defined on the layer above not seperate.
@@ -249,7 +250,7 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
         with open('gru_model.log', 'a') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
@@ -263,7 +264,7 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
         with open('gru_model.log', 'w') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
@@ -361,10 +362,10 @@ def main():
         print(f"The model's average testing loss is: {testing_loss}")
 
         # Save model weights
-        print("Saving model...")
+        print("Saving weights model...")
         #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
         model.save_weights("./saved_GRU_Forecasting_Model_weights/GRU_weights", overwrite=True)
-        print("Model saved!")
+        print("Model weights saved!")
     
     else:
         print('Loading model weights...')

@@ -93,3 +93,238 @@ This is the predicted next timestep values:
 [[ 5.5053208e+03  2.9918811e+03 -4.1219501e+00  1.5190672e+00
   -9.4004279e-01  8.0881981e+01  3.2613289e+01  1.7799715e+01]]
 --------------------------------------------------------------------------------
+22:08 on Thursday, April 28
+Number of epochs: 500
+The n-gram format is: ngram_basic
+Loss for each epoch: [<tf.Tensor: shape=(), dtype=float32, numpy=912688.75>, <tf.Tensor: shape=(), dtype=float32, numpy=712104.25>, <tf.Tensor: shape=(), dtype=float32, numpy=552666.5>, <tf.Tensor: shape=(), dtype=float32, numpy=423400.97>, <tf.Tensor: shape=(), dtype=float32, numpy=319801.88>, <tf.Tensor: shape=(), dtype=float32, numpy=237305.05>, <tf.Tensor: shape=(), dtype=float32, numpy=174940.86>, <tf.Tensor: shape=(), dtype=float32, numpy=129281.93>, <tf.Tensor: shape=(), dtype=float32, numpy=97617.71>, <tf.Tensor: shape=(), dtype=float32, numpy=76588.49>, <tf.Tensor: shape=(), dtype=float32, numpy=63000.59>, <tf.Tensor: shape=(), dtype=float32, numpy=54599.926>, <tf.Tensor: shape=(), dtype=float32, numpy=49265.47>, <tf.Tensor: shape=(), dtype=float32, numpy=45438.434>, <tf.Tensor: shape=(), dtype=float32, numpy=42294.23>, <tf.Tensor: shape=(), dtype=float32, numpy=39510.24>, <tf.Tensor: shape=(), dtype=float32, numpy=37029.07>, <tf.Tensor: shape=(), dtype=float32, numpy=34902.973>, <tf.Tensor: shape=(), dtype=float32, numpy=33166.453>, <tf.Tensor: shape=(), dtype=float32, numpy=31791.734>, <tf.Tensor: shape=(), dtype=float32, numpy=30718.586>, <tf.Tensor: shape=(), dtype=float32, numpy=29871.988>, <tf.Tensor: shape=(), dtype=float32, numpy=29168.672>, <tf.Tensor: shape=(), dtype=float32, numpy=28542.9>, <tf.Tensor: shape=(), dtype=float32, numpy=27962.715>, <tf.Tensor: shape=(), dtype=float32, numpy=27422.373>, <tf.Tensor: shape=(), dtype=float32, numpy=26928.217>, <tf.Tensor: shape=(), dtype=float32, numpy=26489.955>, <tf.Tensor: shape=(), dtype=float32, numpy=26114.355>, <tf.Tensor: shape=(), dtype=float32, numpy=25802.902>, <tf.Tensor: shape=(), dtype=float32, numpy=25552.258>, <tf.Tensor: shape=(), dtype=float32, numpy=25355.13>, <tf.Tensor: shape=(), dtype=float32, numpy=25201.758>, <tf.Tensor: shape=(), dtype=float32, numpy=25082.08>, <tf.Tensor: shape=(), dtype=float32, numpy=24987.482>, <tf.Tensor: shape=(), dtype=float32, numpy=24911.215>, <tf.Tensor: shape=(), dtype=float32, numpy=24847.787>, <tf.Tensor: shape=(), dtype=float32, numpy=24792.172>, <tf.Tensor: shape=(), dtype=float32, numpy=24739.984>, <tf.Tensor: shape=(), dtype=float32, numpy=24688.133>, <tf.Tensor: shape=(), dtype=float32, numpy=24635.137>, <tf.Tensor: shape=(), dtype=float32, numpy=24580.982>, <tf.Tensor: shape=(), dtype=float32, numpy=24526.455>, <tf.Tensor: shape=(), dtype=float32, numpy=24472.31>, <tf.Tensor: shape=(), dtype=float32, numpy=24418.857>, <tf.Tensor: shape=(), dtype=float32, numpy=24366.025>, <tf.Tensor: shape=(), dtype=float32, numpy=24313.557>, <tf.Tensor: shape=(), dtype=float32, numpy=24261.287>, <tf.Tensor: shape=(), dtype=float32, numpy=24209.107>, <tf.Tensor: shape=(), dtype=float32, numpy=24156.932>, <tf.Tensor: shape=(), dtype=float32, numpy=24104.893>, <tf.Tensor: shape=(), dtype=float32, numpy=24052.848>, <tf.Tensor: shape=(), dtype=float32, numpy=24000.414>, <tf.Tensor: shape=(), dtype=float32, numpy=23947.455>, <tf.Tensor: shape=(), dtype=float32, numpy=23894.023>, <tf.Tensor: shape=(), dtype=float32, numpy=23840.25>, <tf.Tensor: shape=(), dtype=float32, numpy=23786.262>, <tf.Tensor: shape=(), dtype=float32, numpy=23732.105>, <tf.Tensor: shape=(), dtype=float32, numpy=23677.756>, <tf.Tensor: shape=(), dtype=float32, numpy=23623.2>, <tf.Tensor: shape=(), dtype=float32, numpy=23568.443>, <tf.Tensor: shape=(), dtype=float32, numpy=23513.55>, <tf.Tensor: shape=(), dtype=float32, numpy=23458.613>, <tf.Tensor: shape=(), dtype=float32, numpy=23403.645>, <tf.Tensor: shape=(), dtype=float32, numpy=23348.607>, <tf.Tensor: shape=(), dtype=float32, numpy=23293.463>, <tf.Tensor: shape=(), dtype=float32, numpy=23238.207>, <tf.Tensor: shape=(), dtype=float32, numpy=23182.857>, <tf.Tensor: shape=(), dtype=float32, numpy=23127.404>, <tf.Tensor: shape=(), dtype=float32, numpy=23071.87>, <tf.Tensor: shape=(), dtype=float32, numpy=23016.268>, <tf.Tensor: shape=(), dtype=float32, numpy=22960.6>, <tf.Tensor: shape=(), dtype=float32, numpy=22904.887>, <tf.Tensor: shape=(), dtype=float32, numpy=22849.14>, <tf.Tensor: shape=(), dtype=float32, numpy=22793.4>, <tf.Tensor: shape=(), dtype=float32, numpy=22737.672>, <tf.Tensor: shape=(), dtype=float32, numpy=22681.982>, <tf.Tensor: shape=(), dtype=float32, numpy=22626.195>, <tf.Tensor: shape=(), dtype=float32, numpy=22570.525>, <tf.Tensor: shape=(), dtype=float32, numpy=22515.113>, <tf.Tensor: shape=(), dtype=float32, numpy=22459.902>, <tf.Tensor: shape=(), dtype=float32, numpy=22405.252>, <tf.Tensor: shape=(), dtype=float32, numpy=22351.225>, <tf.Tensor: shape=(), dtype=float32, numpy=22297.785>, <tf.Tensor: shape=(), dtype=float32, numpy=22244.65>, <tf.Tensor: shape=(), dtype=float32, numpy=22190.81>, <tf.Tensor: shape=(), dtype=float32, numpy=22135.06>, <tf.Tensor: shape=(), dtype=float32, numpy=22077.078>, <tf.Tensor: shape=(), dtype=float32, numpy=22017.418>, <tf.Tensor: shape=(), dtype=float32, numpy=21957.562>, <tf.Tensor: shape=(), dtype=float32, numpy=21899.115>, <tf.Tensor: shape=(), dtype=float32, numpy=21843.06>, <tf.Tensor: shape=(), dtype=float32, numpy=21788.885>, <tf.Tensor: shape=(), dtype=float32, numpy=21735.365>, <tf.Tensor: shape=(), dtype=float32, numpy=21681.385>, <tf.Tensor: shape=(), dtype=float32, numpy=21626.26>, <tf.Tensor: shape=(), dtype=float32, numpy=21569.807>, <tf.Tensor: shape=(), dtype=float32, numpy=21512.297>, <tf.Tensor: shape=(), dtype=float32, numpy=21453.258>, <tf.Tensor: shape=(), dtype=float32, numpy=21393.342>, <tf.Tensor: shape=(), dtype=float32, numpy=21333.795>, <tf.Tensor: shape=(), dtype=float32, numpy=21274.535>, <tf.Tensor: shape=(), dtype=float32, numpy=21215.436>, <tf.Tensor: shape=(), dtype=float32, numpy=21156.506>, <tf.Tensor: shape=(), dtype=float32, numpy=21097.914>, <tf.Tensor: shape=(), dtype=float32, numpy=21039.78>, <tf.Tensor: shape=(), dtype=float32, numpy=20982.27>, <tf.Tensor: shape=(), dtype=float32, numpy=20925.422>, <tf.Tensor: shape=(), dtype=float32, numpy=20869.076>, <tf.Tensor: shape=(), dtype=float32, numpy=20813.168>, <tf.Tensor: shape=(), dtype=float32, numpy=20757.773>, <tf.Tensor: shape=(), dtype=float32, numpy=20702.97>, <tf.Tensor: shape=(), dtype=float32, numpy=20648.904>, <tf.Tensor: shape=(), dtype=float32, numpy=20595.492>, <tf.Tensor: shape=(), dtype=float32, numpy=20542.533>, <tf.Tensor: shape=(), dtype=float32, numpy=20489.953>, <tf.Tensor: shape=(), dtype=float32, numpy=20437.744>, <tf.Tensor: shape=(), dtype=float32, numpy=20386.04>, <tf.Tensor: shape=(), dtype=float32, numpy=20335.014>, <tf.Tensor: shape=(), dtype=float32, numpy=20284.578>, <tf.Tensor: shape=(), dtype=float32, numpy=20234.568>, <tf.Tensor: shape=(), dtype=float32, numpy=20184.863>, <tf.Tensor: shape=(), dtype=float32, numpy=20135.594>, <tf.Tensor: shape=(), dtype=float32, numpy=20086.838>, <tf.Tensor: shape=(), dtype=float32, numpy=20038.623>, <tf.Tensor: shape=(), dtype=float32, numpy=19990.863>, <tf.Tensor: shape=(), dtype=float32, numpy=19943.404>, <tf.Tensor: shape=(), dtype=float32, numpy=19896.307>, <tf.Tensor: shape=(), dtype=float32, numpy=19849.676>, <tf.Tensor: shape=(), dtype=float32, numpy=19803.469>, <tf.Tensor: shape=(), dtype=float32, numpy=19757.592>, <tf.Tensor: shape=(), dtype=float32, numpy=19712.09>, <tf.Tensor: shape=(), dtype=float32, numpy=19667.021>, <tf.Tensor: shape=(), dtype=float32, numpy=19622.318>, <tf.Tensor: shape=(), dtype=float32, numpy=19577.871>, <tf.Tensor: shape=(), dtype=float32, numpy=19533.814>, <tf.Tensor: shape=(), dtype=float32, numpy=19489.9>, <tf.Tensor: shape=(), dtype=float32, numpy=19445.896>, <tf.Tensor: shape=(), dtype=float32, numpy=19402.07>, <tf.Tensor: shape=(), dtype=float32, numpy=19359.07>, <tf.Tensor: shape=(), dtype=float32, numpy=19317.252>, <tf.Tensor: shape=(), dtype=float32, numpy=19275.955>, <tf.Tensor: shape=(), dtype=float32, numpy=19234.275>, <tf.Tensor: shape=(), dtype=float32, numpy=19192.451>, <tf.Tensor: shape=(), dtype=float32, numpy=19151.25>, <tf.Tensor: shape=(), dtype=float32, numpy=19110.52>, <tf.Tensor: shape=(), dtype=float32, numpy=19069.203>, <tf.Tensor: shape=(), dtype=float32, numpy=19028.424>, <tf.Tensor: shape=(), dtype=float32, numpy=18989.645>, <tf.Tensor: shape=(), dtype=float32, numpy=18952.186>, <tf.Tensor: shape=(), dtype=float32, numpy=18913.363>, <tf.Tensor: shape=(), dtype=float32, numpy=18870.986>, <tf.Tensor: shape=(), dtype=float32, numpy=18825.416>, <tf.Tensor: shape=(), dtype=float32, numpy=18779.936>, <tf.Tensor: shape=(), dtype=float32, numpy=18737.63>, <tf.Tensor: shape=(), dtype=float32, numpy=18698.57>, <tf.Tensor: shape=(), dtype=float32, numpy=18660.807>, <tf.Tensor: shape=(), dtype=float32, numpy=18622.852>, <tf.Tensor: shape=(), dtype=float32, numpy=18584.469>, <tf.Tensor: shape=(), dtype=float32, numpy=18545.719>, <tf.Tensor: shape=(), dtype=float32, numpy=18506.523>, <tf.Tensor: shape=(), dtype=float32, numpy=18467.22>, <tf.Tensor: shape=(), dtype=float32, numpy=18428.568>, <tf.Tensor: shape=(), dtype=float32, numpy=18390.795>, <tf.Tensor: shape=(), dtype=float32, numpy=18353.426>, <tf.Tensor: shape=(), dtype=float32, numpy=18316.082>, <tf.Tensor: shape=(), dtype=float32, numpy=18278.957>, <tf.Tensor: shape=(), dtype=float32, numpy=18242.256>, <tf.Tensor: shape=(), dtype=float32, numpy=18205.68>, <tf.Tensor: shape=(), dtype=float32, numpy=18168.932>, <tf.Tensor: shape=(), dtype=float32, numpy=18132.39>, <tf.Tensor: shape=(), dtype=float32, numpy=18096.562>, <tf.Tensor: shape=(), dtype=float32, numpy=18061.28>, <tf.Tensor: shape=(), dtype=float32, numpy=18026.086>, <tf.Tensor: shape=(), dtype=float32, numpy=17990.66>, <tf.Tensor: shape=(), dtype=float32, numpy=17955.4>, <tf.Tensor: shape=(), dtype=float32, numpy=17920.871>, <tf.Tensor: shape=(), dtype=float32, numpy=17887.848>, <tf.Tensor: shape=(), dtype=float32, numpy=17855.086>, <tf.Tensor: shape=(), dtype=float32, numpy=17822.35>, <tf.Tensor: shape=(), dtype=float32, numpy=17789.879>, <tf.Tensor: shape=(), dtype=float32, numpy=17757.902>, <tf.Tensor: shape=(), dtype=float32, numpy=17726.412>, <tf.Tensor: shape=(), dtype=float32, numpy=17695.033>, <tf.Tensor: shape=(), dtype=float32, numpy=17663.488>, <tf.Tensor: shape=(), dtype=float32, numpy=17631.932>, <tf.Tensor: shape=(), dtype=float32, numpy=17600.45>, <tf.Tensor: shape=(), dtype=float32, numpy=17569.342>, <tf.Tensor: shape=(), dtype=float32, numpy=17538.627>, <tf.Tensor: shape=(), dtype=float32, numpy=17508.275>, <tf.Tensor: shape=(), dtype=float32, numpy=17477.906>, <tf.Tensor: shape=(), dtype=float32, numpy=17447.309>, <tf.Tensor: shape=(), dtype=float32, numpy=17416.918>, <tf.Tensor: shape=(), dtype=float32, numpy=17386.873>, <tf.Tensor: shape=(), dtype=float32, numpy=17357.158>, <tf.Tensor: shape=(), dtype=float32, numpy=17327.734>, <tf.Tensor: shape=(), dtype=float32, numpy=17298.547>, <tf.Tensor: shape=(), dtype=float32, numpy=17269.492>, <tf.Tensor: shape=(), dtype=float32, numpy=17240.432>, <tf.Tensor: shape=(), dtype=float32, numpy=17211.268>, <tf.Tensor: shape=(), dtype=float32, numpy=17183.502>, <tf.Tensor: shape=(), dtype=float32, numpy=17156.959>, <tf.Tensor: shape=(), dtype=float32, numpy=17129.254>, <tf.Tensor: shape=(), dtype=float32, numpy=17099.158>, <tf.Tensor: shape=(), dtype=float32, numpy=17067.244>, <tf.Tensor: shape=(), dtype=float32, numpy=17034.852>, <tf.Tensor: shape=(), dtype=float32, numpy=17003.37>, <tf.Tensor: shape=(), dtype=float32, numpy=16973.06>, <tf.Tensor: shape=(), dtype=float32, numpy=16943.477>, <tf.Tensor: shape=(), dtype=float32, numpy=16914.436>, <tf.Tensor: shape=(), dtype=float32, numpy=16885.611>, <tf.Tensor: shape=(), dtype=float32, numpy=16856.916>, <tf.Tensor: shape=(), dtype=float32, numpy=16828.506>, <tf.Tensor: shape=(), dtype=float32, numpy=16800.35>, <tf.Tensor: shape=(), dtype=float32, numpy=16772.898>, <tf.Tensor: shape=(), dtype=float32, numpy=16746.133>, <tf.Tensor: shape=(), dtype=float32, numpy=16719.445>, <tf.Tensor: shape=(), dtype=float32, numpy=16692.623>, <tf.Tensor: shape=(), dtype=float32, numpy=16665.877>, <tf.Tensor: shape=(), dtype=float32, numpy=16639.664>, <tf.Tensor: shape=(), dtype=float32, numpy=16613.938>, <tf.Tensor: shape=(), dtype=float32, numpy=16588.43>, <tf.Tensor: shape=(), dtype=float32, numpy=16563.12>, <tf.Tensor: shape=(), dtype=float32, numpy=16537.926>, <tf.Tensor: shape=(), dtype=float32, numpy=16512.96>, <tf.Tensor: shape=(), dtype=float32, numpy=16488.387>, <tf.Tensor: shape=(), dtype=float32, numpy=16463.95>, <tf.Tensor: shape=(), dtype=float32, numpy=16439.639>, <tf.Tensor: shape=(), dtype=float32, numpy=16415.707>, <tf.Tensor: shape=(), dtype=float32, numpy=16392.03>, <tf.Tensor: shape=(), dtype=float32, numpy=16368.457>, <tf.Tensor: shape=(), dtype=float32, numpy=16345.182>, <tf.Tensor: shape=(), dtype=float32, numpy=16322.077>, <tf.Tensor: shape=(), dtype=float32, numpy=16299.119>, <tf.Tensor: shape=(), dtype=float32, numpy=16276.374>, <tf.Tensor: shape=(), dtype=float32, numpy=16253.941>, <tf.Tensor: shape=(), dtype=float32, numpy=16231.71>, <tf.Tensor: shape=(), dtype=float32, numpy=16209.71>, <tf.Tensor: shape=(), dtype=float32, numpy=16187.901>, <tf.Tensor: shape=(), dtype=float32, numpy=16166.146>, <tf.Tensor: shape=(), dtype=float32, numpy=16144.59>, <tf.Tensor: shape=(), dtype=float32, numpy=16123.367>, <tf.Tensor: shape=(), dtype=float32, numpy=16102.26>, <tf.Tensor: shape=(), dtype=float32, numpy=16081.263>, <tf.Tensor: shape=(), dtype=float32, numpy=16060.51>, <tf.Tensor: shape=(), dtype=float32, numpy=16039.909>, <tf.Tensor: shape=(), dtype=float32, numpy=16019.58>, <tf.Tensor: shape=(), dtype=float32, numpy=15999.557>, <tf.Tensor: shape=(), dtype=float32, numpy=15979.56>, <tf.Tensor: shape=(), dtype=float32, numpy=15959.518>, <tf.Tensor: shape=(), dtype=float32, numpy=15939.585>, <tf.Tensor: shape=(), dtype=float32, numpy=15919.968>, <tf.Tensor: shape=(), dtype=float32, numpy=15900.675>, <tf.Tensor: shape=(), dtype=float32, numpy=15881.576>, <tf.Tensor: shape=(), dtype=float32, numpy=15862.645>, <tf.Tensor: shape=(), dtype=float32, numpy=15843.827>, <tf.Tensor: shape=(), dtype=float32, numpy=15825.072>, <tf.Tensor: shape=(), dtype=float32, numpy=15806.326>, <tf.Tensor: shape=(), dtype=float32, numpy=15787.661>, <tf.Tensor: shape=(), dtype=float32, numpy=15769.286>, <tf.Tensor: shape=(), dtype=float32, numpy=15751.241>, <tf.Tensor: shape=(), dtype=float32, numpy=15733.345>, <tf.Tensor: shape=(), dtype=float32, numpy=15715.633>, <tf.Tensor: shape=(), dtype=float32, numpy=15697.997>, <tf.Tensor: shape=(), dtype=float32, numpy=15680.376>, <tf.Tensor: shape=(), dtype=float32, numpy=15662.88>, <tf.Tensor: shape=(), dtype=float32, numpy=15645.517>, <tf.Tensor: shape=(), dtype=float32, numpy=15628.457>, <tf.Tensor: shape=(), dtype=float32, numpy=15611.54>, <tf.Tensor: shape=(), dtype=float32, numpy=15594.673>, <tf.Tensor: shape=(), dtype=float32, numpy=15577.841>, <tf.Tensor: shape=(), dtype=float32, numpy=15561.281>, <tf.Tensor: shape=(), dtype=float32, numpy=15545.008>, <tf.Tensor: shape=(), dtype=float32, numpy=15528.854>, <tf.Tensor: shape=(), dtype=float32, numpy=15512.808>, <tf.Tensor: shape=(), dtype=float32, numpy=15496.885>, <tf.Tensor: shape=(), dtype=float32, numpy=15481.106>, <tf.Tensor: shape=(), dtype=float32, numpy=15465.53>, <tf.Tensor: shape=(), dtype=float32, numpy=15450.161>, <tf.Tensor: shape=(), dtype=float32, numpy=15434.845>, <tf.Tensor: shape=(), dtype=float32, numpy=15419.731>, <tf.Tensor: shape=(), dtype=float32, numpy=15404.678>, <tf.Tensor: shape=(), dtype=float32, numpy=15389.651>, <tf.Tensor: shape=(), dtype=float32, numpy=15374.776>, <tf.Tensor: shape=(), dtype=float32, numpy=15360.005>, <tf.Tensor: shape=(), dtype=float32, numpy=15345.397>, <tf.Tensor: shape=(), dtype=float32, numpy=15330.865>, <tf.Tensor: shape=(), dtype=float32, numpy=15316.421>, <tf.Tensor: shape=(), dtype=float32, numpy=15301.9375>, <tf.Tensor: shape=(), dtype=float32, numpy=15287.615>, <tf.Tensor: shape=(), dtype=float32, numpy=15273.367>, <tf.Tensor: shape=(), dtype=float32, numpy=15259.396>, <tf.Tensor: shape=(), dtype=float32, numpy=15245.321>, <tf.Tensor: shape=(), dtype=float32, numpy=15231.543>, <tf.Tensor: shape=(), dtype=float32, numpy=15217.539>, <tf.Tensor: shape=(), dtype=float32, numpy=15204.004>, <tf.Tensor: shape=(), dtype=float32, numpy=15190.066>, <tf.Tensor: shape=(), dtype=float32, numpy=15176.968>, <tf.Tensor: shape=(), dtype=float32, numpy=15162.974>, <tf.Tensor: shape=(), dtype=float32, numpy=15150.229>, <tf.Tensor: shape=(), dtype=float32, numpy=15135.824>, <tf.Tensor: shape=(), dtype=float32, numpy=15124.059>, <tf.Tensor: shape=(), dtype=float32, numpy=15109.094>, <tf.Tensor: shape=(), dtype=float32, numpy=15098.834>, <tf.Tensor: shape=(), dtype=float32, numpy=15081.992>, <tf.Tensor: shape=(), dtype=float32, numpy=15075.015>, <tf.Tensor: shape=(), dtype=float32, numpy=15054.699>, <tf.Tensor: shape=(), dtype=float32, numpy=15055.714>, <tf.Tensor: shape=(), dtype=float32, numpy=15029.185>, <tf.Tensor: shape=(), dtype=float32, numpy=15050.546>, <tf.Tensor: shape=(), dtype=float32, numpy=15017.18>, <tf.Tensor: shape=(), dtype=float32, numpy=15086.316>, <tf.Tensor: shape=(), dtype=float32, numpy=15044.305>, <tf.Tensor: shape=(), dtype=float32, numpy=15142.616>, <tf.Tensor: shape=(), dtype=float32, numpy=15034.947>, <tf.Tensor: shape=(), dtype=float32, numpy=15046.128>, <tf.Tensor: shape=(), dtype=float32, numpy=14943.045>, <tf.Tensor: shape=(), dtype=float32, numpy=14925.168>, <tf.Tensor: shape=(), dtype=float32, numpy=14925.51>, <tf.Tensor: shape=(), dtype=float32, numpy=14897.546>, <tf.Tensor: shape=(), dtype=float32, numpy=14908.145>, <tf.Tensor: shape=(), dtype=float32, numpy=14873.76>, <tf.Tensor: shape=(), dtype=float32, numpy=14866.988>, <tf.Tensor: shape=(), dtype=float32, numpy=14853.655>, <tf.Tensor: shape=(), dtype=float32, numpy=14838.555>, <tf.Tensor: shape=(), dtype=float32, numpy=14833.765>, <tf.Tensor: shape=(), dtype=float32, numpy=14816.103>, <tf.Tensor: shape=(), dtype=float32, numpy=14808.808>, <tf.Tensor: shape=(), dtype=float32, numpy=14794.836>, <tf.Tensor: shape=(), dtype=float32, numpy=14784.265>, <tf.Tensor: shape=(), dtype=float32, numpy=14773.884>, <tf.Tensor: shape=(), dtype=float32, numpy=14761.465>, <tf.Tensor: shape=(), dtype=float32, numpy=14752.178>, <tf.Tensor: shape=(), dtype=float32, numpy=14739.775>, <tf.Tensor: shape=(), dtype=float32, numpy=14730.014>, <tf.Tensor: shape=(), dtype=float32, numpy=14718.772>, <tf.Tensor: shape=(), dtype=float32, numpy=14708.309>, <tf.Tensor: shape=(), dtype=float32, numpy=14697.918>, <tf.Tensor: shape=(), dtype=float32, numpy=14687.034>, <tf.Tensor: shape=(), dtype=float32, numpy=14676.985>, <tf.Tensor: shape=(), dtype=float32, numpy=14666.214>, <tf.Tensor: shape=(), dtype=float32, numpy=14656.182>, <tf.Tensor: shape=(), dtype=float32, numpy=14645.665>, <tf.Tensor: shape=(), dtype=float32, numpy=14635.515>, <tf.Tensor: shape=(), dtype=float32, numpy=14625.256>, <tf.Tensor: shape=(), dtype=float32, numpy=14615.075>, <tf.Tensor: shape=(), dtype=float32, numpy=14605.0>, <tf.Tensor: shape=(), dtype=float32, numpy=14594.974>, <tf.Tensor: shape=(), dtype=float32, numpy=14585.143>, <tf.Tensor: shape=(), dtype=float32, numpy=14575.081>, <tf.Tensor: shape=(), dtype=float32, numpy=14565.178>, <tf.Tensor: shape=(), dtype=float32, numpy=14555.255>, <tf.Tensor: shape=(), dtype=float32, numpy=14545.477>, <tf.Tensor: shape=(), dtype=float32, numpy=14535.77>, <tf.Tensor: shape=(), dtype=float32, numpy=14526.019>, <tf.Tensor: shape=(), dtype=float32, numpy=14516.321>, <tf.Tensor: shape=(), dtype=float32, numpy=14506.611>, <tf.Tensor: shape=(), dtype=float32, numpy=14497.032>, <tf.Tensor: shape=(), dtype=float32, numpy=14487.475>, <tf.Tensor: shape=(), dtype=float32, numpy=14478.005>, <tf.Tensor: shape=(), dtype=float32, numpy=14468.53>, <tf.Tensor: shape=(), dtype=float32, numpy=14459.105>, <tf.Tensor: shape=(), dtype=float32, numpy=14449.692>, <tf.Tensor: shape=(), dtype=float32, numpy=14440.383>, <tf.Tensor: shape=(), dtype=float32, numpy=14431.05>, <tf.Tensor: shape=(), dtype=float32, numpy=14421.801>, <tf.Tensor: shape=(), dtype=float32, numpy=14412.57>, <tf.Tensor: shape=(), dtype=float32, numpy=14403.528>, <tf.Tensor: shape=(), dtype=float32, numpy=14394.512>, <tf.Tensor: shape=(), dtype=float32, numpy=14385.39>, <tf.Tensor: shape=(), dtype=float32, numpy=14376.273>, <tf.Tensor: shape=(), dtype=float32, numpy=14367.287>, <tf.Tensor: shape=(), dtype=float32, numpy=14358.329>, <tf.Tensor: shape=(), dtype=float32, numpy=14349.48>, <tf.Tensor: shape=(), dtype=float32, numpy=14340.487>, <tf.Tensor: shape=(), dtype=float32, numpy=14331.695>, <tf.Tensor: shape=(), dtype=float32, numpy=14322.72>, <tf.Tensor: shape=(), dtype=float32, numpy=14314.098>, <tf.Tensor: shape=(), dtype=float32, numpy=14305.157>, <tf.Tensor: shape=(), dtype=float32, numpy=14296.711>, <tf.Tensor: shape=(), dtype=float32, numpy=14287.714>, <tf.Tensor: shape=(), dtype=float32, numpy=14279.461>, <tf.Tensor: shape=(), dtype=float32, numpy=14270.344>, <tf.Tensor: shape=(), dtype=float32, numpy=14262.482>, <tf.Tensor: shape=(), dtype=float32, numpy=14253.11>, <tf.Tensor: shape=(), dtype=float32, numpy=14245.791>, <tf.Tensor: shape=(), dtype=float32, numpy=14235.96>, <tf.Tensor: shape=(), dtype=float32, numpy=14229.67>, <tf.Tensor: shape=(), dtype=float32, numpy=14218.977>, <tf.Tensor: shape=(), dtype=float32, numpy=14214.668>, <tf.Tensor: shape=(), dtype=float32, numpy=14202.738>, <tf.Tensor: shape=(), dtype=float32, numpy=14202.921>, <tf.Tensor: shape=(), dtype=float32, numpy=14189.941>, <tf.Tensor: shape=(), dtype=float32, numpy=14201.643>, <tf.Tensor: shape=(), dtype=float32, numpy=14192.027>, <tf.Tensor: shape=(), dtype=float32, numpy=14233.079>, <tf.Tensor: shape=(), dtype=float32, numpy=14238.881>, <tf.Tensor: shape=(), dtype=float32, numpy=14326.443>, <tf.Tensor: shape=(), dtype=float32, numpy=14317.839>, <tf.Tensor: shape=(), dtype=float32, numpy=14350.772>, <tf.Tensor: shape=(), dtype=float32, numpy=14231.155>, <tf.Tensor: shape=(), dtype=float32, numpy=14175.505>, <tf.Tensor: shape=(), dtype=float32, numpy=14112.452>, <tf.Tensor: shape=(), dtype=float32, numpy=14101.126>, <tf.Tensor: shape=(), dtype=float32, numpy=14108.955>, <tf.Tensor: shape=(), dtype=float32, numpy=14094.065>, <tf.Tensor: shape=(), dtype=float32, numpy=14091.54>, <tf.Tensor: shape=(), dtype=float32, numpy=14069.617>, <tf.Tensor: shape=(), dtype=float32, numpy=14062.316>, <tf.Tensor: shape=(), dtype=float32, numpy=14053.496>, <tf.Tensor: shape=(), dtype=float32, numpy=14045.278>, <tf.Tensor: shape=(), dtype=float32, numpy=14040.716>, <tf.Tensor: shape=(), dtype=float32, numpy=14029.935>, <tf.Tensor: shape=(), dtype=float32, numpy=14024.388>, <tf.Tensor: shape=(), dtype=float32, numpy=14014.963>, <tf.Tensor: shape=(), dtype=float32, numpy=14008.004>, <tf.Tensor: shape=(), dtype=float32, numpy=14000.799>, <tf.Tensor: shape=(), dtype=float32, numpy=13992.862>, <tf.Tensor: shape=(), dtype=float32, numpy=13986.343>, <tf.Tensor: shape=(), dtype=float32, numpy=13978.225>, <tf.Tensor: shape=(), dtype=float32, numpy=13971.447>, <tf.Tensor: shape=(), dtype=float32, numpy=13963.829>, <tf.Tensor: shape=(), dtype=float32, numpy=13956.74>, <tf.Tensor: shape=(), dtype=float32, numpy=13949.551>, <tf.Tensor: shape=(), dtype=float32, numpy=13942.406>, <tf.Tensor: shape=(), dtype=float32, numpy=13935.543>, <tf.Tensor: shape=(), dtype=float32, numpy=13928.29>, <tf.Tensor: shape=(), dtype=float32, numpy=13921.559>, <tf.Tensor: shape=(), dtype=float32, numpy=13914.754>, <tf.Tensor: shape=(), dtype=float32, numpy=13908.18>, <tf.Tensor: shape=(), dtype=float32, numpy=13901.472>, <tf.Tensor: shape=(), dtype=float32, numpy=13894.78>, <tf.Tensor: shape=(), dtype=float32, numpy=13888.054>, <tf.Tensor: shape=(), dtype=float32, numpy=13881.371>, <tf.Tensor: shape=(), dtype=float32, numpy=13874.714>, <tf.Tensor: shape=(), dtype=float32, numpy=13868.048>, <tf.Tensor: shape=(), dtype=float32, numpy=13861.4>, <tf.Tensor: shape=(), dtype=float32, numpy=13854.72>, <tf.Tensor: shape=(), dtype=float32, numpy=13848.086>, <tf.Tensor: shape=(), dtype=float32, numpy=13841.497>, <tf.Tensor: shape=(), dtype=float32, numpy=13834.95>, <tf.Tensor: shape=(), dtype=float32, numpy=13828.387>, <tf.Tensor: shape=(), dtype=float32, numpy=13821.878>, <tf.Tensor: shape=(), dtype=float32, numpy=13815.41>, <tf.Tensor: shape=(), dtype=float32, numpy=13808.973>, <tf.Tensor: shape=(), dtype=float32, numpy=13802.53>, <tf.Tensor: shape=(), dtype=float32, numpy=13796.11>, <tf.Tensor: shape=(), dtype=float32, numpy=13789.716>, <tf.Tensor: shape=(), dtype=float32, numpy=13783.387>, <tf.Tensor: shape=(), dtype=float32, numpy=13777.049>, <tf.Tensor: shape=(), dtype=float32, numpy=13770.723>, <tf.Tensor: shape=(), dtype=float32, numpy=13764.424>, <tf.Tensor: shape=(), dtype=float32, numpy=13758.191>, <tf.Tensor: shape=(), dtype=float32, numpy=13751.947>, <tf.Tensor: shape=(), dtype=float32, numpy=13745.735>, <tf.Tensor: shape=(), dtype=float32, numpy=13739.525>, <tf.Tensor: shape=(), dtype=float32, numpy=13733.366>, <tf.Tensor: shape=(), dtype=float32, numpy=13727.187>, <tf.Tensor: shape=(), dtype=float32, numpy=13721.072>, <tf.Tensor: shape=(), dtype=float32, numpy=13714.929>, <tf.Tensor: shape=(), dtype=float32, numpy=13708.854>, <tf.Tensor: shape=(), dtype=float32, numpy=13702.75>, <tf.Tensor: shape=(), dtype=float32, numpy=13696.881>, <tf.Tensor: shape=(), dtype=float32, numpy=13690.978>, <tf.Tensor: shape=(), dtype=float32, numpy=13684.937>, <tf.Tensor: shape=(), dtype=float32, numpy=13678.902>, <tf.Tensor: shape=(), dtype=float32, numpy=13673.034>, <tf.Tensor: shape=(), dtype=float32, numpy=13667.11>, <tf.Tensor: shape=(), dtype=float32, numpy=13661.281>, <tf.Tensor: shape=(), dtype=float32, numpy=13655.223>, <tf.Tensor: shape=(), dtype=float32, numpy=13649.515>, <tf.Tensor: shape=(), dtype=float32, numpy=13643.478>, <tf.Tensor: shape=(), dtype=float32, numpy=13638.006>, <tf.Tensor: shape=(), dtype=float32, numpy=13631.878>, <tf.Tensor: shape=(), dtype=float32, numpy=13626.763>, <tf.Tensor: shape=(), dtype=float32, numpy=13620.5>, <tf.Tensor: shape=(), dtype=float32, numpy=13616.219>, <tf.Tensor: shape=(), dtype=float32, numpy=13609.996>, <tf.Tensor: shape=(), dtype=float32, numpy=13607.785>, <tf.Tensor: shape=(), dtype=float32, numpy=13602.684>, <tf.Tensor: shape=(), dtype=float32, numpy=13606.644>, <tf.Tensor: shape=(), dtype=float32, numpy=13607.901>, <tf.Tensor: shape=(), dtype=float32, numpy=13631.574>, <tf.Tensor: shape=(), dtype=float32, numpy=13658.104>, <tf.Tensor: shape=(), dtype=float32, numpy=13734.369>, <tf.Tensor: shape=(), dtype=float32, numpy=13807.345>, <tf.Tensor: shape=(), dtype=float32, numpy=13903.315>, <tf.Tensor: shape=(), dtype=float32, numpy=13867.866>, <tf.Tensor: shape=(), dtype=float32, numpy=13758.724>, <tf.Tensor: shape=(), dtype=float32, numpy=13600.725>, <tf.Tensor: shape=(), dtype=float32, numpy=13540.341>, <tf.Tensor: shape=(), dtype=float32, numpy=13545.858>, <tf.Tensor: shape=(), dtype=float32, numpy=13555.821>, <tf.Tensor: shape=(), dtype=float32, numpy=13551.999>, <tf.Tensor: shape=(), dtype=float32, numpy=13528.048>, <tf.Tensor: shape=(), dtype=float32, numpy=13513.017>, <tf.Tensor: shape=(), dtype=float32, numpy=13505.678>, <tf.Tensor: shape=(), dtype=float32, numpy=13501.937>, <tf.Tensor: shape=(), dtype=float32, numpy=13498.546>, <tf.Tensor: shape=(), dtype=float32, numpy=13491.613>]
+Mean Training loss: 24649.861328125
+Mean Testing loss: 1492511.3046875
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.5144355e+03  2.9846643e+03 -1.0183056e+01 -3.8451269e-02
+  -1.0003056e+01  8.0219902e+01  3.6279404e+01  2.8003994e+01]]
+--------------------------------------------------------------------------------
+16:46 on Tuesday, May 03
+Number of epochs: 500
+The n-gram format is: ngram_basic
+Mean Training loss: 16527.08984375
+Mean Testing loss: 1484370.94921875
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.4807236e+03  2.9825188e+03 -3.7411580e+00  2.0440146e-02
+  -1.4217819e+00  8.6079971e+01  3.5025585e+01  1.3329369e+01]]
+--------------------------------------------------------------------------------
+16:47 on Tuesday, May 03
+Number of epochs: 500
+The n-gram format is: ngram_diff
+Mean Training loss: 13660.5
+Mean Testing loss: 18036.349853515625
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[-94.50099    85.48128    15.149642   59.393654  -50.848633    1.9778866
+   62.73728    80.94993  ]]
+--------------------------------------------------------------------------------
+16:56 on Tuesday, May 03
+Number of epochs: 500
+The n-gram format is: ngram_diff
+Mean Training loss: 13686.5390625
+Mean Testing loss: 17005.884826660156
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[-10.773757     0.87296957  20.003145   -13.245125   -17.176908
+   -9.013437    27.888744    26.48428   ]]
+--------------------------------------------------------------------------------
+16:56 on Tuesday, May 03
+Number of epochs: 500
+The n-gram format is: ngram_basic
+Mean Training loss: 15921.3662109375
+Mean Testing loss: 1575000.69921875
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[5735.6133   2908.497    -102.14088    31.129316  106.89164   116.41862
+   -47.484444 -119.03573 ]]
+--------------------------------------------------------------------------------
+17:44 on Tuesday, May 03
+Number of epochs: 1000
+The n-gram format is: ngram_basic
+Mean Training loss: 14296.326171875
+Mean Testing loss: 1505235.26953125
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.5405952e+03  3.0244404e+03  1.2990409e+01 -3.7687747e+00
+  -3.6206261e+01  9.4751785e+01  5.7465736e+01  5.0815742e+01]]
+--------------------------------------------------------------------------------
+17:44 on Tuesday, May 03
+Number of epochs: 1000
+The n-gram format is: ngram_diff
+Mean Training loss: 12404.900390625
+Mean Testing loss: 16252.256591796875
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[-48.38421    -11.9896145    2.5855722   -1.2003095    0.42912894
+    7.1960287   -1.7260451    1.4360311 ]]
+--------------------------------------------------------------------------------
+17:59 on Tuesday, May 03
+Number of epochs: 1000
+The n-gram format is: ngram_basic
+Mean Training loss: 14081.2919921875
+Mean Testing loss: 1585134.7109375
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.7128862e+03  3.0463018e+03  3.2069008e+01  7.9050250e+00
+   1.6228434e+01  1.1689358e+02  5.9934792e+01 -2.9804783e+00]]
+--------------------------------------------------------------------------------
+18:07 on Tuesday, May 03
+Number of epochs: 1000
+The n-gram format is: ngram_diff
+Mean Training loss: 12988.5390625
+Mean Testing loss: 17511.015686035156
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[  18.243317   -62.6286      39.975113   -15.289274  -127.45425
+   -42.349525    27.392448     1.4166503]]
+--------------------------------------------------------------------------------
+18:13 on Tuesday, May 03
+Number of epochs: None
+The n-gram format is: ngram_diff
+Mean Training loss: None
+Mean Testing loss: None
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[  18.243317   -62.6286      39.975113   -15.289274  -127.45425
+   -42.349525    27.392448     1.4166503]]
+--------------------------------------------------------------------------------
+18:13 on Tuesday, May 03
+Number of epochs: None
+The n-gram format is: ngram_basic
+Mean Training loss: None
+Mean Testing loss: None
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.7128862e+03  3.0463018e+03  3.2069008e+01  7.9050250e+00
+   1.6228434e+01  1.1689358e+02  5.9934792e+01 -2.9804783e+00]]
+--------------------------------------------------------------------------------
+18:22 on Tuesday, May 03
+Number of epochs: None
+The n-gram format is: ngram_basic
+Mean Training loss: None
+Mean Testing loss: None
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[ 5.7128862e+03  3.0463018e+03  3.2069008e+01  7.9050250e+00
+   1.6228434e+01  1.1689358e+02  5.9934792e+01 -2.9804783e+00]]
+--------------------------------------------------------------------------------
+18:22 on Tuesday, May 03
+Number of epochs: None
+The n-gram format is: ngram_diff
+Mean Training loss: None
+Mean Testing loss: None
+These are the timesteps given to the model for inference prediction:
+[[ 5.48841935e+03  2.98326407e+03 -1.77423504e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474025e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77438413e-03 -1.03638195e-05
+  -8.65660240e-06  1.00000000e+02  2.54474040e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77448404e-03 -1.30037188e-05
+  -1.55973703e-05  1.00000000e+02  3.53985390e+01  1.60000000e+01
+   5.48841935e+03  2.98326407e+03 -1.77462033e-03 -5.00649548e-06
+  -9.83911377e-06  1.00000000e+02  3.46671165e+01  1.60000000e+01]]
+This is the predicted next timestep values:
+[[  18.243317   -62.6286      39.975113   -15.289274  -127.45425
+   -42.349525    27.392448     1.4166503]]
+--------------------------------------------------------------------------------
