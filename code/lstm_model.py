@@ -26,9 +26,10 @@ class LSTM_Forecasting_Model(tf.keras.Model):
         #super(Model, self).__init__()
 
         # Initialize the hyperparameters of the model.
-        self.batch_size = 100
+        self.batch_size = 128
         self.window_size = 10
-        self.dense_size = 110
+        self.dense_size = 100
+        self.units = 128
         self.output_size = 8 # The number of output features per timestep.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
@@ -37,7 +38,7 @@ class LSTM_Forecasting_Model(tf.keras.Model):
         self.mse_loss = tf.keras.losses.MeanSquaredError(name = "MSE Loss")
         self.leaky_relu = tf.keras.layers.LeakyReLU(alpha = self.leaky_relu_alpha)
         # Initialize model layers.
-        self.LSTM_module_1 = tf.keras.layers.LSTM(units = self.window_size, return_sequences = True, return_state = True)
+        self.LSTM_module_1 = tf.keras.layers.LSTM(units = self.units, return_sequences = True, return_state = True)
         #self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         #self.dense_2 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         # Using activation defined on the layer above not seperate.
@@ -45,7 +46,7 @@ class LSTM_Forecasting_Model(tf.keras.Model):
         
         self.Dropout = tf.keras.layers.Dropout(rate = self.dropout_rate)
 
-        self.LSTM_module_2 = tf.keras.layers.LSTM(units = self.window_size, return_sequences = True, return_state = True)
+        self.LSTM_module_2 = tf.keras.layers.LSTM(units = self.units, return_sequences = True, return_state = True)
         self.dense_1 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         self.dense_2 = tf.keras.layers.Dense(self.dense_size, activation = self.leaky_relu)
         # No activation on the output layer.
@@ -73,8 +74,9 @@ class LSTM_Forecasting_Model(tf.keras.Model):
 
             output_2 = self.LSTM_module_2(inputs = output_1[0], initial_state = LSTM_module_1_final_state)
             output_3 = self.dense_1(inputs = output_2[0])
-            output_4 = self.dense_2(inputs = output_3) 
-            predictions = self.dense_3(inputs = output_4)
+            # Dense layer not in use to match other model layouts.
+            #output_4 = self.dense_2(inputs = output_3) 
+            predictions = self.dense_3(inputs = output_3)
 
             # Taking the second and third outputs returned from the LSTM layer as the 
             # final state.
@@ -263,7 +265,7 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
         with open('lstm_model.log', 'a') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
@@ -277,7 +279,7 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
         with open('lstm_model.log', 'w') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
