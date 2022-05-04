@@ -29,14 +29,18 @@ class MLP_Forecasting_Model(tf.keras.Model):
         self.output_size = 8 # The number of features in the data.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
+        self.leaky_relu_alpha = 3e-1
+        self.leaky_relu = tf.keras.layers.LeakyReLU(alpha = self.leaky_relu_alpha)
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         self.loss = tf.keras.losses.MeanSquaredError(name = "MSE Loss")
 
         # Initialize model layers.
         # Trying LeakyReLU instead o ReLU.
-        self.dense_1 = tf.keras.layers.Dense(units = 100, activation = 'LeakyReLU')
-        # No activation on this layer as the output layer.
-        self.dense_2 = tf.keras.layers.Dense(units = self.output_size)
+        self.dense_1 = tf.keras.layers.Dense(units = 100, activation = self.leaky_relu)
+        # No activation on the layer prior to output layer.
+        self.dense_2 = tf.keras.layers.Dense(units = 100)
+        
+        self.dense_3 = tf.keras.layers.Dense(units = self.output_size)
 
         self.Dropout = tf.keras.layers.Dropout(rate = self.dropout_rate)
 
@@ -51,20 +55,22 @@ class MLP_Forecasting_Model(tf.keras.Model):
         param testing: Used to control dropout layer usage.
  
         return: predicted values for 'position_x', 'position_y', 'heading',
-        'velocity_x', and 'velocity_y'.
+        'velocity_x', 'velocity_y', along with the computed social features..
         '''
 
         if testing == True:
             # No dropout layer for testing.
-            x = inputs
-            output_1 = self.dense_1(x)
-            predictions = self.dense_2(output_1)
+            output_1 = self.dense_1(inputs)
+            output_2 = self.dense_2(output_1)
+            predictions = self.dense_3(output_2)
 
         else:
             x = inputs
-            output_1 = self.dense_1(x)
-            output_1 = self.Dropout(output_1)
-            predictions = self.dense_2(output_1)
+            output_1 = self.dense_1(inputs)
+            output_2 = self.Dropout(output_1)
+            output_3 = self.dense_2(output_2)
+            output_4 = self.Dropout(output_3)
+            predictions = self.dense_3(output_4)
 
         return predictions
 
@@ -197,7 +203,7 @@ def results_logging(epochs, ngram_type_selected, losses, training_loss, testing_
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
             log.write('\n' f'The n-gram format is: {ngram_type_selected}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
@@ -212,7 +218,7 @@ def results_logging(epochs, ngram_type_selected, losses, training_loss, testing_
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
             log.write('\n' f'The n-gram format is: {ngram_type_selected}')
-            log.write('\n' f'Loss for each epoch: {losses}')
+            #log.write('\n' f'Loss for each epoch: {losses}')
             log.write('\n' f'Mean Training loss: {training_loss}')
             log.write('\n' f'Mean Testing loss: {testing_loss}')
             log.write('\n' f'These are the timesteps given to the model for inference prediction:')
@@ -316,103 +322,133 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 500
+    epochs = 1000
 
-    ngram_types = ['ngram_diff', 'ngram_basic']
-    if len(sys.argv) !=2 or sys.argv[1] not in ngram_types:
-        print('Usage is :python3 mlp_model_1.py [ngram_basic or ngram_diff]')
+    # Choices for ngram type and training or load existing weights for the ngram
+    # type selected.
+    ngram_types = ['ngram_diff', 'ngram_basic', 'train_model', 'load_weights']
+    if len(sys.argv) !=3 or sys.argv[1] not in ngram_types:
+        print('Usage is :python3 mlp_model_1.py [ngram_basic or ngram_diff] with [train_model or load_weights]')
         exit()
     ngram_type_selected = sys.argv[1]
-    # Load data using preprocess function.
-    print('Loading data...')
-    #data = motion_forecasting_get_data()
-    train_data, validation_data, test_data = motion_forecasting_get_data()
 
-    # The data is in the shape (number of examples, number of features).
-    # It needs to be flattened in a way that each timestep in a sequence is kept together. 
-    # For each sequence the last timestep is seperated into a seperate vector to be the true_values.
-    # The code below also removes the 'timestep' feature from the data since it may not have 
-    # any predictive power.
+    # The script_state is if the model should be retrained or instead the weights loaded.
+    script_state = sys.argv[2]
+    if script_state == 'train_model':
 
-    print('Preparing data...')
-    # Numpy arrays to hold the data.
-    #inputs = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)*(number_timesteps - 1)]) 
-    #true_values = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)])
+        # Load data using preprocess function.
+        print('Loading data...')
+        #data = motion_forecasting_get_data()
+        train_data, validation_data, test_data = motion_forecasting_get_data()
+
+        # The data is in the shape (number of examples, number of features).
+        # It needs to be flattened in a way that each timestep in a sequence is kept together. 
+        # For each sequence the last timestep is seperated into a seperate vector to be the true_values.
+        # The code below also removes the 'timestep' feature from the data since it may not have 
+        # any predictive power.
+
+        print('Preparing data...')
+        # Numpy arrays to hold the data.
+        #inputs = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)*(number_timesteps - 1)]) 
+        #true_values = np.empty(shape = [data.shape[0]//number_timesteps, (data.shape[1] - 1)])
     
     
-    # This is the first method for creating the sequences and true values
-    #for i in tqdm(range(data.shape[0]//number_timesteps)):
-    #    inputs_seq, true_values_seq = data[i*(number_timesteps - 1):(i+1)*(number_timesteps - 1), 1:], data[(i+1)*(number_timesteps - 1), 1:]
-    #    inputs[i] = inputs_seq.reshape(1, (data.shape[1] - 1)*(number_timesteps - 1))
-    #    true_values[i] = true_values_seq
+        # This is the first method for creating the sequences and true values
+        #for i in tqdm(range(data.shape[0]//number_timesteps)):
+        #    inputs_seq, true_values_seq = data[i*(number_timesteps - 1):(i+1)*(number_timesteps - 1), 1:], data[(i+1)*(number_timesteps - 1), 1:]
+        #    inputs[i] = inputs_seq.reshape(1, (data.shape[1] - 1)*(number_timesteps - 1))
+        #    true_values[i] = true_values_seq
 
-    # This is the second method for creating the sequences. It uses the concept of an ngram.
-    # In this case it is an '5 gram' Where the there is 4 timesteps and you are trying to 
-    # Predict the 5th. 
-    # Each timestep consisting of the features (eg. position_x, position_y, heading, velocity_x, velocity_y)
-    # collectively is considered to be a 'token' or 'word' and the sequence is the sentence.
+        # This is the second method for creating the sequences. It uses the concept of an ngram.
+        # In this case it is an '5 gram' Where the there is 4 timesteps and 	you are trying to 
+        # Predict the 5th. 
+        # Each timestep consisting of the features (eg. position_x, position_y, heading, velocity_x, velocity_y)
+        # collectively is considered to be a 'token' or 'word' and the sequence is the sentence.
     
-    if ngram_type_selected == 'ngram_diff':
-        #inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], np.subtract(data[i+3, 1:], data[i+4, 1:])] for i in range(data.shape[0] - 4)])
-        train_inputs, train_true_values = create_ngram_diff(train_data)
-        test_inputs, test_true_values = create_ngram_diff(test_data)
-    if ngram_type_selected == 'ngram_basic':
-        #inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
-        train_inputs, train_true_values = create_ngram_basic(train_data)
-        test_inputs, test_true_values = create_ngram_diff(test_data)
+        if ngram_type_selected == 'ngram_diff':
+            #inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], np.subtract(data[i+3, 1:], data[i+4, 1:])] for i in range(data.shape[0] - 4)])
+            train_inputs, train_true_values = create_ngram_diff(train_data)
+            test_inputs, test_true_values = create_ngram_diff(test_data)
+        if ngram_type_selected == 'ngram_basic':
+            #inputs_sequence = np.array([[data[i, 1:], data[i+1, 1:], data[i+2, 1:], data[i+3, 1:], data[i+4, 1:]] for i in range(data.shape[0] - 4)])
+            train_inputs, train_true_values = create_ngram_basic(train_data)
+            test_inputs, test_true_values = create_ngram_diff(test_data)
 
-    # Takes the last column and splits it off the data arrays into a seperate 
-    # label array.
-    #inputs, true_values = np.hsplit(inputs_sequence, [-1])
-    #print(inputs.shape)
-    #print(inputs[:10])
-    #print(true_values[0])
-    # The inputs need to be flattened so that dimensions 2 and 3 
-    # become 1 dimension. The shape should be (the length of
-    # dimension 1, dimension 2 x dimension 3)
-    #input_dim = inputs.shape[1] * inputs.shape[2]
-    #inputs = np.reshape(inputs, (inputs.shape[0], input_dim))
-    #true_values_dim = true_values.shape[1] * true_values.shape[2]
-    #true_values = np.reshape(true_values, (true_values.shape[0], true_values_dim))
-    #print(inputs.shape)
-    #print(true_values.shape)
+        # Takes the last column and splits it off the data arrays into a seperate 
+        # label array.
+        #inputs, true_values = np.hsplit(inputs_sequence, [-1])
+        #print(inputs.shape)
+        #print(inputs[:10])
+        #print(true_values[0])
+        # The inputs need to be flattened so that dimensions 2 and 3 
+        # become 1 dimension. The shape should be (the length of
+        # dimension 1, dimension 2 x dimension 3)
+        #input_dim = inputs.shape[1] * inputs.shape[2]
+        #inputs = np.reshape(inputs, (inputs.shape[0], input_dim))
+        #true_values_dim = true_values.shape[1] * true_values.shape[2]
+        #true_values = np.reshape(true_values, (true_values.shape[0], true_values_dim))
+        #print(inputs.shape)
+        #print(true_values.shape)
 
-    # Split the data into train and test with roughly a 70% train, 30% test split.
-    #split = np.floor(inputs.shape[0]*0.70).astype(np.int32)
-    #train_inputs, train_true_values = inputs[:split, :], true_values[:split]
-    #test_inputs, test_true_values = inputs[split:, :], true_values[split:]
-    #print(train_inputs)
-    #print(train_true_values)
+        # Split the data into train and test with roughly a 70% train, 30% test split.
+        #split = np.floor(inputs.shape[0]*0.70).astype(np.int32)
+        #train_inputs, train_true_values = inputs[:split, :], true_values[:split]
+        #test_inputs, test_true_values = inputs[split:, :], true_values[split:]
+        #print(train_inputs)
+        #print(train_true_values)
     
-    # Initialize model.
-    model = MLP_Forecasting_Model()
+        # Initialize model.
+        model = MLP_Forecasting_Model()
 
 
-    # Train model for a number of epochs.
+        # Train model for a number of epochs.
 
-    losses = []
+        losses = []
 
-    print('Model training ...')
-    for i in tqdm(range(epochs)):
-        losses.append(train(model, train_inputs, train_true_values))
+        print('Model training ...')
+        for i in tqdm(range(epochs)):
+            losses.append(train(model, train_inputs, train_true_values))
 
-    visualize_loss(losses)
-    # Test model. Print the average testing loss.
-    print('Model testing ...')
-    #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
-    testing_loss = test(model, test_inputs, test_true_values)
-    print(f"The model's average testing loss is: {testing_loss}")
+        visualize_loss(losses)
+        training_loss = tf.reduce_mean(losses)
 
-    #print("Saving model...")
-    #tf.saved_model.save(model, "./saved_MLP_Forecasting_Model")
-    #print("Model saved!")
+        # Test model. Print the average testing loss.
+        print('Model testing ...')
+        #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
+        testing_loss = test(model, test_inputs, test_true_values)
+        print(f"The model's average testing loss is: {testing_loss}")
+
+        print("Saving model weights...")
+        if ngram_type_selected == 'ngram_basic':
+            model.save_weights("./saved_MLP_Basic_Forecasting_Model_weights/MLP_Basic_weights", overwrite=True)
+        if ngram_type_selected == 'ngram_diff':
+            model.save_weights("./saved_MLP_Diff_Forecasting_Model_weights/MLP_Diff_weights", overwrite=True)
+        print("Model weights saved!")
+
+    else:
+        print('Loading model weights...')
+        model = MLP_Forecasting_Model()
+        if ngram_type_selected == 'ngram_basic':
+            model.load_weights("./saved_MLP_Basic_Forecasting_Model_weights/MLP_Basic_weights")
+        if ngram_type_selected == 'ngram_diff':
+            model.load_weights("./saved_MLP_Diff_Forecasting_Model_weights/MLP_Diff_weights")
+        print('Model weights loaded...')
+        train_data, validation_data, test_data = motion_forecasting_get_data()
+        epochs = 'None'
+        losses = 'None'
+        training_loss = 'None'
+        testing_loss = 'None'
 
     # Select a sequence from the data for prediction.
     # Again not including the "timesteps" column as in the dataset above.
-    inference_data = test_data[:4, 1:]
+    inference_data = test_data[:5]
     # Flatten timesteps as above
-    inference_dim = inference_data.shape[0] * inference_data.shape[1]
-    prediction_inputs = np.reshape(inference_data, (1, inference_dim))
+    #inference_dim = inference_data.shape[0] * inference_data.shape[1]
+    if ngram_type_selected == 'ngram_basic':
+       prediction_inputs, unused_values = create_ngram_basic(inference_data)
+    if ngram_type_selected == 'ngram_diff':
+       prediction_inputs, unused_values = create_ngram_diff(inference_data) 
+    #prediction_inputs = np.reshape(inference_data, (1, inference_dim))
     #Print input timesteps
     print("These are the timesteps given to the model for inference prediction")
     print(prediction_inputs)
@@ -423,7 +459,6 @@ def main():
     print(prediction)
 
     # Log model information and results
-    training_loss = tf.reduce_mean(losses)
     results_logging(epochs, ngram_type_selected, losses, training_loss, testing_loss, prediction_inputs, prediction)
     pass
 
