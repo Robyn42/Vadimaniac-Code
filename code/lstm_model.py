@@ -307,7 +307,7 @@ def main():
     '''
 
     number_timesteps = 110
-    epochs = 3000
+    epochs = 20
 
     arg_options = ['train_model', 'load_weights']
     if len(sys.argv) !=2 or sys.argv[1] not in arg_options:
