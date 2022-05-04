@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from load_data import load_data
 from model_config import OBS_LEN, PRED_LEN
 from av1_features_eval.eval_forecasting import get_ade
+from normalize import get_reference, get_deltas, undo_deltas
 
 
 class GRU_ObsPred_Model(tf.keras.Model):
@@ -43,12 +44,13 @@ class GRU_ObsPred_Model(tf.keras.Model):
 
         # Initialize model layers.
         # Observer inputs include both locational and social features
-        self.observer = tf.keras.layers.GRU(units=self.units, return_sequences=True, return_state=True)
+        self.observer = tf.keras.layers.GRU(units=self.units,
+                                            return_sequences=True, return_state=True)
         # Predictor inputs have only position_x and position_y
         self.predictor_cell = tf.keras.layers.GRUCell(units=self.units)
 
         # Classify predictor output units into positonal outputs
-        pred_dense_1 = tf.keras.layers.Dense(self.dense_size, activation='LeakyReLU')
+        pred_dense_1 = tf.keras.layers.Dense(self.dense_size, activation='ReLU')
         pred_dropout = tf.keras.layers.Dropout(rate=self.dropout_rate)
         pred_dense_2 = tf.keras.layers.Dense(self.output_size)
         self.predictor_tail = tf.keras.Sequential([pred_dense_1, pred_dropout, pred_dense_2])
@@ -109,8 +111,12 @@ def train(model, data_loader):
     """
     batch_loss = []
     batch_ades = []
+    mse = []
 
     for i, batch_data in enumerate(load_data(batch_size=model.batch_size)):
+        pred_reference = get_reference(batch_data, -PRED_LEN)
+        batch_reference, batch_data = get_deltas(batch_data, inplace=True)
+
         training_inputs = batch_data[:, :OBS_LEN, :]
         # Retain only the target two features, position_x and position_y for true labels
         training_truth = batch_data[:, -PRED_LEN:, :2]
@@ -124,24 +130,55 @@ def train(model, data_loader):
         # Collect loss for the batch.
         batch_loss.append(loss)
 
-        ade = np.mean([get_ade(preds[i], training_truth[i]) for i in range(model.batch_size)])
+        # print(f"batch {i} loss {loss}")
+        preds_abs = undo_deltas(preds.numpy(), pred_reference)
+        training_truth_abs = undo_deltas(training_truth, pred_reference)
+        # print(np.max(training_truth_abs - batch_data_original[:, -PRED_LEN:, :2]))
+        ade = np.mean([get_ade(preds_abs[i], training_truth_abs[i]) for i in range(model.batch_size)])
         batch_ades.append(ade)
+        mse.append(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
 
+    print("average loss", np.mean(batch_loss))
     print("average ade", np.mean(batch_ades))
+    print("average mse", np.mean(mse))
     #Calculate loss over all training examples
     training_loss = tf.reduce_mean(batch_loss)
     return training_loss
 
 
-def test(model, test_inputs, test_true_values):
+def test(model, test_inputs, load_data):
     """
     Tests the model over one epoch.
-    The testing data is batched and the loss per batch is collected to
-    calculate the loss over the entire testing set.
-
-    params and return as above.
     """
-    return train(model, data_loader)
+    batch_loss = []
+    batch_ades = []
+    mse = []
+
+    for i, batch_data in enumerate(load_data(batch_size=model.batch_size)):
+        pred_reference = get_reference(batch_data, -PRED_LEN)
+        batch_reference, batch_data = get_deltas(batch_data, inplace=True)
+
+        testing_inputs = batch_data[:, :OBS_LEN, :]
+        # Retain only the target two features, position_x and position_y for true labels
+        testing_truth = batch_data[:, -PRED_LEN:, :2]
+        # Gradient tape scope
+        preds = model.call(testing_inputs)
+        loss = model.loss(testing_truth, preds)
+        # Collect loss for the batch.
+        batch_loss.append(loss)
+
+        # print(f"batch {i} loss {loss}")
+        preds_abs = undo_deltas(preds.numpy(), pred_reference)
+        testing_truth_abs = undo_deltas(testing_truth, pred_reference)
+        # print(np.max(testing_truth_abs - batch_data_original[:, -PRED_LEN:, :2]))
+        ade = np.mean([get_ade(preds_abs[i], testing_truth_abs[i]) for i in range(model.batch_size)])
+        batch_ades.append(ade)
+        mse.append(((preds_abs - testing_truth_abs) ** 2).mean(axis=(1, 2)))
+
+    print("average loss", np.mean(batch_loss))
+    print("average ade", np.mean(batch_ades))
+    print("average mse", np.mean(mse))
+    return np.mean(batch_loss)
 
 
 def visualize_loss(losses):
@@ -177,7 +214,7 @@ def main():
     """
     saved_model = False
     if saved_model == False:
-        epochs = 1
+        epochs = 20
         model = GRU_ObsPred_Model()
 
         # Train model for a number of epochs.
@@ -195,19 +232,23 @@ def main():
     else:
         model = tf.saved_model.load(f"./saved_GRU_Observe_Predict_{PRED_LEN}_Model")
 
-    inference_data = next(load_data(batch_size=3))
-    prediction_inputs = inference_data[:, :-PRED_LEN, :]
+    inference_data = next(load_data(batch_size=1))
+    pred_ref = get_reference(inference_data, -PRED_LEN)
+    inference_ref, inference_deltas = get_deltas(inference_data)
+    prediction_inputs = inference_deltas[:, :-PRED_LEN, :]
     #Print input timesteps
-    print("Giving the model the following timesteps:")
-    print(prediction_inputs)
+    # print("Giving the model the following timesteps:")
+    # print(inference_data)
 
     # Print ground truth
     print(f"The next {PRED_LEN} ground truth values will be:")
-    print(inference_data[:, -PRED_LEN:, :])
+    print(undo_deltas(inference_data[:, -PRED_LEN:, :], pred_ref))
 
     # Print predicted timesteps
     print(f"The next {PRED_LEN} predicted values will be:")
-    print(model(prediction_inputs))
+    pred_deltas = model(prediction_inputs).numpy()
+    pred_outputs = undo_deltas(pred_deltas, pred_ref)
+    print(pred_outputs)
 
 
 if __name__ == '__main__':

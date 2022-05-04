@@ -13,7 +13,7 @@ def file_gen(dir):
         yield os.path.join(dir, file)
 
 
-def load_data(mode="social", batch_size=1000):
+def load_data(mode="social", batch_size=1000, dir ='../../features/val/'):
     """
     Generate data batch by batch.
 
@@ -26,8 +26,6 @@ def load_data(mode="social", batch_size=1000):
     NOTE: Currently the file locations are hardcoded. This can be updated in 
     later revisions.
     """
-    dir = '../../features/val/'
-
     if mode == 'social':
         input_features = {
             'position_x': 6,
