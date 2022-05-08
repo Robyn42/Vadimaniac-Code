@@ -9,10 +9,11 @@ from load_data import load_data
 from model_config import OBS_LEN, PRED_LEN
 from av1_features_eval.eval_forecasting import get_ade
 from normalize import get_reference, get_deltas, undo_deltas
-
+from util.visualize import visualize_trajs
+import time, os
 
 class GRU_ObsPred_Model(tf.keras.Model):
-    def __init__(self):
+    def __init__(self, units=128):
 
         """
         The Model is a GRU version of an obsever/predictor model from the
@@ -32,7 +33,7 @@ class GRU_ObsPred_Model(tf.keras.Model):
 
         # Initialize the hyperparameters of the model.
         self.batch_size = 128
-        self.units = 128
+        self.units = units
         self.dense_size = 100
         self.pred_len = PRED_LEN
         self.output_size = 2  # The number of features per timestep.
@@ -102,18 +103,25 @@ class GRU_ObsPred_Model(tf.keras.Model):
         #print(f'Loss per batch: {loss}')
         return loss
 
-def train(model, data_loader):
+def train(model, data_loader, log_dst):
     """
     Trains the model over the number of epochs specified.
 
-    param data loader: a Python function that generates data batch by batch, shaped (batch_size, number of timesteps,number of features)
+    data loader: a Python function that generates data batch by batch, shaped (batch_size, number of timesteps,number of features)
     return: loss per batch as an array
     """
     batch_loss = []
     batch_ades = []
     mse = []
 
-    for i, batch_data in enumerate(load_data(batch_size=model.batch_size)):
+    run_times = []
+    start_time = time.time()
+
+    num_batches = 0
+    # Print header for loss reporting
+    print_and_log(f"batch number, batch loss, batch ade, batch mse, runtime in s", dst=log_dst)
+
+    for i, batch_data in enumerate(load_data(batch_size=model.batch_size, dir ='../../features/train/')):
         pred_reference = get_reference(batch_data, -PRED_LEN)
         batch_reference, batch_data = get_deltas(batch_data, inplace=True)
 
@@ -130,23 +138,34 @@ def train(model, data_loader):
         # Collect loss for the batch.
         batch_loss.append(loss)
 
-        # print(f"batch {i} loss {loss}")
         preds_abs = undo_deltas(preds.numpy(), pred_reference)
         training_truth_abs = undo_deltas(training_truth, pred_reference)
-        # print(np.max(training_truth_abs - batch_data_original[:, -PRED_LEN:, :2]))
+        # print_and_log(np.max(training_truth_abs - batch_data_original[:, -PRED_LEN:, :2]), dst=log_dst)
         ade = np.mean([get_ade(preds_abs[i], training_truth_abs[i]) for i in range(model.batch_size)])
         batch_ades.append(ade)
+        batch_mse = np.mean(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
         mse.append(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
 
-    print("average loss", np.mean(batch_loss))
-    print("average ade", np.mean(batch_ades))
-    print("average mse", np.mean(mse))
+        curr_time = time.time()
+        run_time = curr_time - start_time
+        print_and_log(f"{i}, {loss}, {ade}, {batch_mse}, {run_time}", log_dst)
+        start_time = curr_time
+        run_times.append(run_time)
+
+        num_batches += 1
+
+
+    print_and_log("Training average metrics: loss, ade, mse", log_dst)
+    print_and_log(f"{np.mean(batch_loss)}, {np.mean(batch_ades)}, {np.mean(mse)}", log_dst)
+    print_and_log(f"Total samples in epoch: {model.batch_size * num_batches}",  dst=log_dst)
+    print_and_log(f"Total runtime in mins: {np.sum(run_times) / 60}", log_dst)
+
     #Calculate loss over all training examples
     training_loss = tf.reduce_mean(batch_loss)
     return training_loss
 
 
-def test(model, test_inputs, load_data):
+def test(model, load_data, log_dst):
     """
     Tests the model over one epoch.
     """
@@ -154,7 +173,7 @@ def test(model, test_inputs, load_data):
     batch_ades = []
     mse = []
 
-    for i, batch_data in enumerate(load_data(batch_size=model.batch_size)):
+    for i, batch_data in enumerate(load_data(batch_size=model.batch_size, dir='../../features/val/')):
         pred_reference = get_reference(batch_data, -PRED_LEN)
         batch_reference, batch_data = get_deltas(batch_data, inplace=True)
 
@@ -167,17 +186,16 @@ def test(model, test_inputs, load_data):
         # Collect loss for the batch.
         batch_loss.append(loss)
 
-        # print(f"batch {i} loss {loss}")
+        # print_and_log(f"batch {i} loss {loss}")
         preds_abs = undo_deltas(preds.numpy(), pred_reference)
         testing_truth_abs = undo_deltas(testing_truth, pred_reference)
-        # print(np.max(testing_truth_abs - batch_data_original[:, -PRED_LEN:, :2]))
+        # print_and_log(np.max(testing_truth_abs - batch_data_original[:, -PRED_LEN:, :2]))
         ade = np.mean([get_ade(preds_abs[i], testing_truth_abs[i]) for i in range(model.batch_size)])
         batch_ades.append(ade)
         mse.append(((preds_abs - testing_truth_abs) ** 2).mean(axis=(1, 2)))
 
-    print("average loss", np.mean(batch_loss))
-    print("average ade", np.mean(batch_ades))
-    print("average mse", np.mean(mse))
+    print_and_log("Testing average metrics: loss, ade, mse", log_dst)
+    print_and_log(f"{np.mean(batch_loss)}, {np.mean(batch_ades)}, {np.mean(mse)}", log_dst)
     return np.mean(batch_loss)
 
 
@@ -198,8 +216,12 @@ def visualize_loss(losses):
 
     pass
 
+def print_and_log(line, dst):
+    print(line)
+    with open(dst, 'a') as log:
+        log.write(f'{line}\n')
 
-def main():
+def run():
     """
     Main function.
     
@@ -212,44 +234,88 @@ def main():
     The last timestep of the "x" or "inputs" data needs to be removed. Additionally, the first element of the 
     "y" or "true_values" needs to be removed as well. 
     """
+
+    continue_training = True
+    starting_epoch = 1  # READ the log and set this as the last epoch there!!!
+    epochs = 1
+    unit_size = 64
     saved_model = False
+
+    results_dir = f"./saved_PRED_{PRED_LEN}_Model/{unit_size}"
+    if not os.path.exists(results_dir):
+        os.mkdir(results_dir)
+    saved_weights_path = f"{results_dir}/weights/curr/"
+    saved_weights_per_epoch = f"{results_dir}/weights/per_epoch/"
+    log_dst = f"{results_dir}/pred_{PRED_LEN}_{unit_size}_log"
+
     if saved_model == False:
-        epochs = 20
-        model = GRU_ObsPred_Model()
+        print_and_log(f"Start training at epoch={starting_epoch}...", dst=log_dst)
+
+        model = GRU_ObsPred_Model(units=unit_size)
+
+        if continue_training:
+            model.load_weights(saved_weights_path)
+            print_and_log("Loading weights to continue training", dst=log_dst)
+
 
         # Train model for a number of epochs.
-        print('Model training ...')
- 
+        print_and_log('Model training ...', dst=log_dst)
+
+        start_time = time.time()
         # List to hold loss values per epoch
         losses = []
-        for i in range(epochs):
-            losses.append(train(model, load_data))
-        visualize_loss(losses)
+        for i in range(starting_epoch, starting_epoch + epochs):
+            losses.append(train(model, load_data, log_dst=log_dst))
+            model.save_weights(saved_weights_path)
+            curr_time = time.time()
+            print_and_log(f"Epoch {i} took {(curr_time - start_time)/60} min", dst=log_dst)
+            start_time = curr_time
 
-        print("Saving model...")
-        tf.saved_model.save(model, f"./saved_GRU_Observe_Predict_{PRED_LEN}_Model")
-        print("Model saved!")
+            print_and_log("Saving model...", dst=log_dst)
+            model.save_weights(saved_weights_path)
+            model.save_weights(f"{saved_weights_per_epoch}/{i}")
+            print_and_log("Model saved!", dst=log_dst)
+        # visualize_loss(losses)
     else:
-        model = tf.saved_model.load(f"./saved_GRU_Observe_Predict_{PRED_LEN}_Model")
+        print_and_log(f"Testing session only...", dst=log_dst)
+        model.load_weights(saved_weights_path)
 
-    inference_data = next(load_data(batch_size=1))
+    test(model, load_data, log_dst=log_dst)
+
+    inference_data = next(load_data(batch_size=1, dir='../../features/val/'))
     pred_ref = get_reference(inference_data, -PRED_LEN)
-    inference_ref, inference_deltas = get_deltas(inference_data)
-    prediction_inputs = inference_deltas[:, :-PRED_LEN, :]
-    #Print input timesteps
-    # print("Giving the model the following timesteps:")
-    # print(inference_data)
+    whole_seq_ref, whole_seq_deltas = get_deltas(inference_data)
+    pred_inputs = whole_seq_deltas[:, :-PRED_LEN, :]
 
-    # Print ground truth
-    print(f"The next {PRED_LEN} ground truth values will be:")
-    print(undo_deltas(inference_data[:, -PRED_LEN:, :], pred_ref))
-
-    # Print predicted timesteps
-    print(f"The next {PRED_LEN} predicted values will be:")
-    pred_deltas = model(prediction_inputs).numpy()
+    pred_deltas = model(pred_inputs).numpy()
     pred_outputs = undo_deltas(pred_deltas, pred_ref)
-    print(pred_outputs)
 
+    pred_inputs = undo_deltas(pred_inputs, whole_seq_ref)
+    truth = undo_deltas(inference_data[:, -PRED_LEN:, :], pred_ref)
+
+    # print(f"Input sequence: {pred_inputs[0, :, :2]}")
+    # print(f"Ground truth (left two columns) vs prediction (right two columns): {np.hstack((truth[0, :, :2], pred_outputs[0, :, :2]))}")
+
+    # visualize_trajs(np.squeeze(pred_inputs), np.squeeze(pred_outputs),
+    #                 np.squeeze(truth), path="obs_pred_sample_result.png")
+    # print_and_log(pred_outputs, dst=log_dst)
+
+    val_data_gen = load_data(batch_size=1, dir='../../features/val/')
+    for j in range(5):
+        inference_data = next(val_data_gen)
+        pred_ref = get_reference(inference_data, -PRED_LEN)
+        whole_seq_ref, whole_seq_deltas = get_deltas(inference_data)
+        pred_inputs = whole_seq_deltas[:, :-PRED_LEN, :]
+
+        pred_deltas = model(pred_inputs).numpy()
+        pred_outputs = undo_deltas(pred_deltas, pred_ref)
+
+        pred_inputs = undo_deltas(pred_inputs, whole_seq_ref)
+        truth = undo_deltas(inference_data[:, -PRED_LEN:, :], pred_ref)
+
+        visualize_trajs(np.squeeze(pred_inputs), np.squeeze(pred_outputs),
+                        np.squeeze(truth), path=f"{results_dir}/obs_pred_sample_result_{j}.png")
+    model.summary()
 
 if __name__ == '__main__':
-    main()
+    run()
