@@ -21,4 +21,5 @@ def visualize_trajs(obs, preds, truth, path=""):
         plt.show()
     else:
         plt.savefig(path, dpi=300)
+    plt.close()
 
