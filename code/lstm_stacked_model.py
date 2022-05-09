@@ -279,7 +279,7 @@ def visualize_loss(losses):
 
     return None
 
-def results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction):
+def results_logging(epochs, losses, ades, mses):
     '''
     Creates a log of the model's output including the number of epochs,
     the testing, and training loss.
@@ -295,31 +295,39 @@ def results_logging(epochs, losses, training_loss, testing_loss, prediction_inpu
 
     now = datetime.datetime.now()
     # If log file exists, append to it.
-    if os.path.exists('lstm_model.log'):
+    if os.path.exists('lstm_stacked_model.log'):
         with open('lstm_model.log', 'a') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'Training loss: {losses}')
+            log.write('\n' f'Training ADE: {ades}')
+            log.write('\n' f'Training MSE: {mses}')
             #log.write('\n' f'Loss for each epoch: {losses}')
-            log.write('\n' f'Mean Training loss: {training_loss}')
-            log.write('\n' f'Mean Testing loss: {testing_loss}')
-            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
-            log.write('\n' f'{prediction_inputs}')
-            log.write('\n' f'This is the predicted next timestep values:')
-            log.write('\n' f'{prediction}')
+            #log.write('\n' f'Mean Training loss: {training_loss}')
+            #log.write('\n' f'Mean Testing loss: {testing_loss}')
+            #log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            #log.write('\n' f'{prediction_inputs}')
+            #log.write('\n' f'This is the predicted next timestep values:')
+            #log.write('\n' f'{prediction}')
             log.write('\n')
             log.write(f'-'*80)
     else:
         # If log file does not exist, create it.
-        with open('lstm_model.log', 'w') as log:
+        with open('lstm_stacked_model.log', 'w') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
+            log.write('\n' f'Number of epochs: {epochs}')
+            log.write('\n' f'Training loss: {losses}')
+            log.write('\n' f'Training ADE: {ades}')
+            log.write('\n' f'Training MSE: {mses}')
             #log.write('\n' f'Loss for each epoch: {losses}')
-            log.write('\n' f'Mean Training loss: {training_loss}')
-            log.write('\n' f'Mean Testing loss: {testing_loss}')
-            log.write('\n' f'These are the timesteps given to the model for inference prediction:')
-            log.write('\n' f'{prediction_inputs}')
-            log.write('\n' f'This is the predicted next timestep values:')
-            log.write('\n' f'{prediction}')
+            #log.write('\n' f'Mean Training loss: {training_loss}')
+            #log.write('\n' f'Mean Testing loss: {testing_loss}')
+            #log.write('\n' f'These are the timesteps given to the model for inference prediction:')
+            #log.write('\n' f'{prediction_inputs}')
+            #log.write('\n' f'This is the predicted next timestep values:')
+            #log.write('\n' f'{prediction}')
             log.write('\n')
             log.write(f'-'*80)
 
@@ -453,7 +461,7 @@ def main():
 
     # Log model information and results
     #training_loss = tf.reduce_mean(losses)
-    #results_logging(epochs, losses, training_loss, testing_loss, prediction_inputs, prediction)
+    results_logging(epochs, losses, ades, mses)
 
     
     pass
