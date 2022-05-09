@@ -437,11 +437,13 @@ def main():
         model = LSTM_Forecasting_Model()
         model.load_weights("./saved_LSTM_Forecasting_Model_weights/LSTM_weights")
         print('Model weights loaded...')
-        train_data, validation_data, test_data = motion_forecasting_get_data()
+        #train_data, validation_data, test_data = motion_forecasting_get_data()
         epochs = 'None'
         losses = 'None'
         training_loss = 'None'
         testing_loss = 'None'
+        ades = 'None'
+        mses = 'None'
         
 
     # Select a sequence from the data for prediction.
