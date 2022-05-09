@@ -53,8 +53,6 @@ def load_data(mode="social", batch_size=1000, dir ='../../features/val/'):
             yield batch_data
             batch_data = np.zeros((batch_size, OBS_LEN + PRED_LEN, len(input_features)))
 
-        if i >= 1000:
-            break
     if i % batch_size != 0:
         yield batch_data
 
