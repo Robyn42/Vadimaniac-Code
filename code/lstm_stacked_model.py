@@ -160,6 +160,7 @@ def train(model): #train_inputs, train_true_values):
     batch_ades = []
     batch_mse = []
     num_batches = 0
+    start_time = datetime.time()
     # Set the initial_state of the model for the first run
     # of the call in the for loop below.
     initial_state = None
@@ -171,7 +172,7 @@ def train(model): #train_inputs, train_true_values):
         #training_inputs = train_inputs[i*model.batch_size:(i+1)*model.batch_size]
         #print(training_input.shape)
         #training_true_values = train_true_values[i*model.batch_size:(i+1)*model.batch_size]
-    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='/ltmp/features/train/')):
+    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='../features/train/')):
         pred_reference = get_reference(batch_data)
         batch_reference, batch_data = get_deltas(batch_data, inplace=True)
 
@@ -207,6 +208,9 @@ def train(model): #train_inputs, train_true_values):
         # final_state of the previous one.
         #initial_state = [forward_pass[1], forward_pass[2]]
 
+    end_time = datetime.time()
+    run_time = end_time - start_time
+
     #Calculate loss over all training examples
     #training_loss = tf.reduce_mean(batch_loss)
     # Switching calculation to numpy operations in an attempt
@@ -215,10 +219,10 @@ def train(model): #train_inputs, train_true_values):
     training_ade = np.mean(batch_ades)
     training_mse = np.mean(batch_mse)
     
-    return training_loss, training_ade, training_mse, num_batches
+    return training_loss, training_ade, training_mse, num_batches, run_time
 
 
-def test(model, test_inputs, test_true_values):
+def test(model): #, test_inputs, test_true_values):
     '''
     Tests the model over one epoch.
     The testing data is batched and the loss per batch is collected to
@@ -226,40 +230,76 @@ def test(model, test_inputs, test_true_values):
 
     params and return as above.
     '''
+    # NOTE: As in the train function, some of the code below is being commented 
+    # out to allow for the usage of the same preprocessing functionality 
+    # in use by the gru_obspred_model.
+
     # Drop timesteps that are beyond the window_size.
     # Same as in train function.
-    test_timesteps_removed = test_inputs.shape[0]%model.window_size
+    #test_timesteps_removed = test_inputs.shape[0]%model.window_size
     
-    test_inputs = test_inputs[:-test_timesteps_removed]
-    test_true_values = test_true_values[:-test_timesteps_removed] 
+    #test_inputs = test_inputs[:-test_timesteps_removed]
+    #test_true_values = test_true_values[:-test_timesteps_removed] 
 
     # Array to hold batch loss values
-    batch_loss = np.empty(shape = [test_inputs.shape[0]//model.batch_size])
+    #batch_loss = np.empty(shape = [test_inputs.shape[0]//model.batch_size])
 
     # Reshape inputs and true_values by window size
-    test_inputs = tf.reshape(test_inputs, [(test_inputs.shape[0] // model.window_size), model.window_size, model.output_size])
-    test_true_values = tf.reshape(test_true_values, [(test_true_values.shape[0] // model.window_size), model.window_size, model.output_size])
+    #test_inputs = tf.reshape(test_inputs, [(test_inputs.shape[0] // model.window_size), model.window_size, model.output_size])
+    #test_true_values = tf.reshape(test_true_values, [(test_true_values.shape[0] // model.window_size), model.window_size, model.output_size])
+
+    batch_loss = []
+    batch_ades = []
+    batch_mse = []
+    num_batches = 0
+    start_time = datetime.time()
 
     # Set the initial_state of the model for the first run
     # of the call in the for loop below.
     initial_state = None
 
     # Batching method by dividing the number of input rows by the batch size.
-    for i in range(test_inputs.shape[0]//model.batch_size):
+    #for i in range(test_inputs.shape[0]//model.batch_size):
         # The code here moves between the batches in the loop by 
         # shifting over by the number of batches.
-        testing_inputs = test_inputs[i*model.batch_size:(i+1)*model.batch_size]
+        #testing_inputs = test_inputs[i*model.batch_size:(i+1)*model.batch_size]
         #print(training_input.shape)
-        testing_true_values = test_true_values[i*model.batch_size:(i+1)*model.batch_size]
-
+        #testing_true_values = test_true_values[i*model.batch_size:(i+1)*model.batch_size]
+    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='../features/val/')):
+        pred_reference = get_reference(batch_data)
+        batch_reference, batch_data = get_deltas(batch_data, inplace=True)
+        # The last row of the inputs is deleted.
+        testing_inputs = batch_data[:, :-1, :] 
+        # The "social features" are not predicted so they are
+        # not included in the loss function calculations.
+        # The first row of the true values is deleted.
+        testing_true_values = batch_data[:, 1:, :2]
+        
         forward_pass = model.call(testing_inputs, initial_state, model_testing = True)
         forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
-        batch_loss[i] = model.loss_function(testing_true_values, forward_pass_pred)
+        # Collect loss for the batch.
+        #batch_loss[i] = model.loss_function(testing_true_values, forward_pass_pred)
+        batch_loss.append(loss)
+        preds_abs = undo_deltas(forward_pass[0].numpy(), pred_reference)
+        testing_truth_abs = undo_deltas(testing_true_values, pred_reference)
+        
+        ade = np.mean([get_ade(preds_abs[i], training_truth_abs[i]) for i in range(model.batch_size)])
+        batch_ades.append(ade)
+        batch_mse.append(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
 
+        num_batches += 1
+
+    end_time = datetime.time()
+    run_time = end_time - start_time
+  
     #Calculate loss over all testing examples
-    testing_loss = tf.reduce_mean(batch_loss)
-
-    return testing_loss
+    #testing_loss = tf.reduce_mean(batch_loss)
+    # Switching calculation to numpy operations in an attempt
+    # to ensure the metrics match the gru_obspred_model
+    testing_loss = np.mean(batch_loss)
+    testing_ade = np.mean(batch_ades)
+    testing_mse = np.mean(batch_mse)
+    return testing_loss, testing_ade, testing_mse, num_batches, run_time 
 
 
 def visualize_loss(losses):
@@ -279,7 +319,7 @@ def visualize_loss(losses):
 
     return None
 
-def results_logging(epochs, losses, ades, mses):
+def results_logging(epochs, losses, ades, mses, train_runtime, test_losses, test_ades, test_mses, test_runtime):
     '''
     Creates a log of the model's output including the number of epochs,
     the testing, and training loss.
@@ -302,6 +342,11 @@ def results_logging(epochs, losses, ades, mses):
             log.write('\n' f'Training loss: {losses}')
             log.write('\n' f'Training ADE: {ades}')
             log.write('\n' f'Training MSE: {mses}')
+            log.write('\n' f'Training runtime: {train_runtime}')
+            log.write('\n' f'Testing loss: {test_losses}')
+            log.write('\n' f'Testing ADE: {test_ades}')
+            log.write('\n' f'Testing MSE: {test_mses}')
+            log.write('\n' f'Testing runtime: {test_runtime}')
             #log.write('\n' f'Loss for each epoch: {losses}')
             #log.write('\n' f'Mean Training loss: {training_loss}')
             #log.write('\n' f'Mean Testing loss: {testing_loss}')
@@ -321,6 +366,11 @@ def results_logging(epochs, losses, ades, mses):
             log.write('\n' f'Training loss: {losses}')
             log.write('\n' f'Training ADE: {ades}')
             log.write('\n' f'Training MSE: {mses}')
+            log.write('\n' f'Training runtime: {train_runtime}')
+            log.write('\n' f'Testing loss: {test_losses}')
+            log.write('\n' f'Testing ADE: {test_ades}')
+            log.write('\n' f'Testing MSE: {test_mses}')
+            log.write('\n' f'Testing runtime: {test_runtime}')
             #log.write('\n' f'Loss for each epoch: {losses}')
             #log.write('\n' f'Mean Training loss: {training_loss}')
             #log.write('\n' f'Mean Testing loss: {testing_loss}')
@@ -412,20 +462,28 @@ def main():
 
         #for i in tqdm(range(epochs)):
             #losses.append(train(model, train_inputs, train_true_values))
-        training_losses, training_ades, training_mses, num_batches = train(model)
-        losses.append(training_losses), 
+        training_losses, training_ades, training_mses, num_batches, training_runtime = train(model)
+        losses.append(training_losses) 
         ades.append(training_ades)
         mses.append(training_mses)
 
         visualize_loss(losses)
         training_loss = tf.reduce_mean(losses)
-        print(losses, ades, mses, num_batches)
+        print(losses, ades, mses, num_batches, training_runtime)
         # Test model. Print the average testing loss.
         print('LSTM Motion Forecasting Model testing ...')
         #print(f"The model's average testing loss is: {test(model, test_inputs, test_true_values)}")
         #testing_loss = test(model, test_inputs, test_true_values)
         #print(f"The model's average testing loss is: {testing_loss}")
+        test_losses = []
+        test_ades = []
+        test_mses = []
 
+        testing_losses, testing_ades, testing_mses, num_batches, testing_runtime = test(model)
+        test_losses.append(testing_losses)
+        test_ades.append(testing_ades)
+        test_mses.append(testing_mses)
+        print(testing_losses, testing_ades, testing_mses, num_batches, testing_runtime)
         # Save model weights
         print("Saving model...")
         #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
@@ -444,6 +502,9 @@ def main():
         testing_loss = 'None'
         ades = 'None'
         mses = 'None'
+        test_losses = 'None'
+        test_ades = 'None'
+        test_mses = 'None'
         
 
     # Select a sequence from the data for prediction.
@@ -463,7 +524,7 @@ def main():
 
     # Log model information and results
     #training_loss = tf.reduce_mean(losses)
-    results_logging(epochs, losses, ades, mses)
+    results_logging(epochs, losses, ades, mses, training_runtime, test_losses, test_ades, test_mses, testing_runtime)
 
     
     pass
