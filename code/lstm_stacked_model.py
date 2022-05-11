@@ -7,11 +7,13 @@ from functools import reduce
 import sys
 import os
 import datetime
+import time
 import matplotlib.pyplot as plt
 from preprocess import motion_forecasting_get_data
 from load_data import load_data
 from av1_features_eval.eval_forecasting import get_ade
 from normalize import get_reference, get_deltas, undo_deltas
+from util.visualize import visualize_trajs
 
 class LSTM_Forecasting_Model(tf.keras.Model):
     def __init__(self):
@@ -33,7 +35,7 @@ class LSTM_Forecasting_Model(tf.keras.Model):
         self.window_size = 10
         self.dense_size = 100
         self.units = 128
-        self.output_size = 2 # The number of output features per timestep.
+        self.output_size = 5 # The number of output features per timestep.
         self.dropout_rate = 3e-2
         self.learning_rate = 1e-3
         self.leaky_relu_alpha = 3e-1
@@ -92,14 +94,15 @@ class LSTM_Forecasting_Model(tf.keras.Model):
             output_2 = self.LSTM_module_2(inputs = output_1[0], initial_state = LSTM_module_1_final_state)
             output_3 = self.dense_1(inputs = output_2[0])
             output_4 = self.Dropout(inputs = output_3)
-            output_5 = self.dense_2(inputs = output_4)
-            output_6 = self.Dropout(inputs = output_5)
-            predictions = self.dense_3(output_6)
+            # Dense layer not in use to match other model layouts.
+            #output_5 = self.dense_2(inputs = output_4)
+            #output_6 = self.Dropout(inputs = output_5)
+            predictions = self.dense_3(output_4)
             # Taking the second and third output returned from the LSTM layer as the 
             # final state.
             final_state = [output_2[1], output_2[2]]
-
-        return predictions, final_state
+        # Removed the return of the final_state
+        return predictions
 
 
     def loss_function(self, true_values, predictions):
@@ -160,7 +163,7 @@ def train(model): #train_inputs, train_true_values):
     batch_ades = []
     batch_mse = []
     num_batches = 0
-    start_time = datetime.time()
+    start_time = time.time()
     # Set the initial_state of the model for the first run
     # of the call in the for loop below.
     initial_state = None
@@ -172,16 +175,19 @@ def train(model): #train_inputs, train_true_values):
         #training_inputs = train_inputs[i*model.batch_size:(i+1)*model.batch_size]
         #print(training_input.shape)
         #training_true_values = train_true_values[i*model.batch_size:(i+1)*model.batch_size]
-    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='../features/train/')):
-        pred_reference = get_reference(batch_data)
+    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='/ltmp/features/train/')):
+        pred_reference = get_reference(batch_data, 0)
         batch_reference, batch_data = get_deltas(batch_data, inplace=True)
 
         # The last row of the inputs is deleted.
         training_inputs = batch_data[:, :-1, :]
+        #training_inputs = batch_data[:, :79, :]
+        #print(training_inputs)
         # The "social features" are not predicted so they are
         # not included in the loss function calculations.
         # The first row of the true values is deleted.
-        training_true_values = batch_data[:, 1:, :2]
+        training_true_values = batch_data[:, 1:, :]
+        #training_true_values = batch_data[:, 1:80, :2]
         # Gradient tape scope
         with tf.GradientTape() as tape:
             forward_pass = model.call(training_inputs, initial_state, model_testing = False)
@@ -189,17 +195,17 @@ def train(model): #train_inputs, train_true_values):
             # training_values before going into the loss calculation.
             #forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
             #loss = model.loss_function(training_true_values, forward_pass_pred)
-            loss = model.loss_function(training_true_values, forward_pass[0])
+            loss = model.loss_function(training_true_values, forward_pass)
         # Optimize
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
         # Collect loss for the batch. 
 
         batch_loss.append(loss)
-        preds_abs = undo_deltas(forward_pass[0].numpy(), pred_reference)
+        preds_abs = undo_deltas(forward_pass.numpy(), pred_reference)
         training_truth_abs = undo_deltas(training_true_values, pred_reference)
         # print_and_log(np.max(training_truth_abs - batch_data_original[:, -PRED_LEN:, :2]), dst=log_dst)
-        ade = np.mean([get_ade(preds_abs[i], training_truth_abs[i]) for i in range(model.batch_size)])
+        ade = np.mean([get_ade(preds_abs[i][:,:2], training_truth_abs[i][:,:2]) for i in range(model.batch_size)])
         batch_ades.append(ade)
         #batch_mse = np.mean(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
         batch_mse.append(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
@@ -208,7 +214,7 @@ def train(model): #train_inputs, train_true_values):
         # final_state of the previous one.
         #initial_state = [forward_pass[1], forward_pass[2]]
 
-    end_time = datetime.time()
+    end_time = time.time()
     run_time = end_time - start_time
 
     #Calculate loss over all training examples
@@ -252,7 +258,7 @@ def test(model): #, test_inputs, test_true_values):
     batch_ades = []
     batch_mse = []
     num_batches = 0
-    start_time = datetime.time()
+    start_time = time.time()
 
     # Set the initial_state of the model for the first run
     # of the call in the for loop below.
@@ -265,31 +271,36 @@ def test(model): #, test_inputs, test_true_values):
         #testing_inputs = test_inputs[i*model.batch_size:(i+1)*model.batch_size]
         #print(training_input.shape)
         #testing_true_values = test_true_values[i*model.batch_size:(i+1)*model.batch_size]
-    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='../features/val/')):
-        pred_reference = get_reference(batch_data)
+    for i, batch_data in enumerate(load_data(batch_size = model.batch_size, dir ='/ltmp/features/val/')):
+        pred_reference = get_reference(batch_data, 0)
         batch_reference, batch_data = get_deltas(batch_data, inplace=True)
         # The last row of the inputs is deleted.
-        testing_inputs = batch_data[:, :-1, :] 
+        #testing_inputs = batch_data[:, :-1, :] 
+        testing_inputs = batch_data[:, :79, :]
+        #print(testing_inputs)
         # The "social features" are not predicted so they are
         # not included in the loss function calculations.
         # The first row of the true values is deleted.
-        testing_true_values = batch_data[:, 1:, :2]
+        #testing_true_values = batch_data[:, 1:, :2]
+        testing_true_values = batch_data[:, 1:80, :]
         
         forward_pass = model.call(testing_inputs, initial_state, model_testing = True)
-        forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
+        
+        #forward_pass_pred = tf.reshape(forward_pass[0], [model.batch_size, model.window_size, model.output_size])
         # Collect loss for the batch.
         #batch_loss[i] = model.loss_function(testing_true_values, forward_pass_pred)
+        loss = model.loss_function(testing_true_values, forward_pass)
         batch_loss.append(loss)
-        preds_abs = undo_deltas(forward_pass[0].numpy(), pred_reference)
+        preds_abs = undo_deltas(forward_pass.numpy(), pred_reference)
         testing_truth_abs = undo_deltas(testing_true_values, pred_reference)
         
-        ade = np.mean([get_ade(preds_abs[i], training_truth_abs[i]) for i in range(model.batch_size)])
+        ade = np.mean([get_ade(preds_abs[i][:,:2], testing_truth_abs[i][:,:2]) for i in range(model.batch_size)])
         batch_ades.append(ade)
-        batch_mse.append(((preds_abs - training_truth_abs)**2).mean(axis=(1, 2)))
+        batch_mse.append(((preds_abs - testing_truth_abs)**2).mean(axis=(1, 2)))
 
         num_batches += 1
 
-    end_time = datetime.time()
+    end_time = time.time()
     run_time = end_time - start_time
   
     #Calculate loss over all testing examples
@@ -299,6 +310,9 @@ def test(model): #, test_inputs, test_true_values):
     testing_loss = np.mean(batch_loss)
     testing_ade = np.mean(batch_ades)
     testing_mse = np.mean(batch_mse)
+    #print(testing_loss)
+    #print(testing_ade)
+    #print(testing_mse)
     return testing_loss, testing_ade, testing_mse, num_batches, run_time 
 
 
@@ -336,7 +350,7 @@ def results_logging(epochs, losses, ades, mses, train_runtime, test_losses, test
     now = datetime.datetime.now()
     # If log file exists, append to it.
     if os.path.exists('lstm_stacked_model.log'):
-        with open('lstm_model.log', 'a') as log:
+        with open('lstm_stacked_model.log', 'a') as log:
             log.write('\n' f'{now.strftime("%H:%M on %A, %B %d")}')
             log.write('\n' f'Number of epochs: {epochs}')
             log.write('\n' f'Training loss: {losses}')
@@ -382,6 +396,19 @@ def results_logging(epochs, losses, ades, mses, train_runtime, test_losses, test
             log.write(f'-'*80)
 
     return None
+
+def prediction_function(model, inference_data):
+    pred_timesteps = []
+    pred_timesteps.append(inference_data)
+    #pred_timesteps.append(np.reshape(inference_data, (1, inference_data.shape[0], inference_data.shape[1])))
+    #social_features = np.array([[0,0,0]])
+    #pred_timesteps.append(np.hstack((inference_data, social_features)))
+    for i in range(30):
+        prediction_inputs = pred_timesteps[i]
+        #prediction_inputs = np.reshape(prediction_inputs, (1, prediction_inputs.shape[0], prediction_inputs.shape[1]))
+        #pred_timesteps.append(np.hstack((np.reshape(model(prediction_inputs, initial_state = None), (1, 2)), social_features)))
+        pred_timesteps.append(model(prediction_inputs, initial_state = None)) 
+    return np.array(pred_timesteps)[:,:, -3]
 
 def main():
     '''
@@ -467,7 +494,7 @@ def main():
         ades.append(training_ades)
         mses.append(training_mses)
 
-        visualize_loss(losses)
+        #visualize_loss(losses)
         training_loss = tf.reduce_mean(losses)
         print(losses, ades, mses, num_batches, training_runtime)
         # Test model. Print the average testing loss.
@@ -483,7 +510,8 @@ def main():
         test_losses.append(testing_losses)
         test_ades.append(testing_ades)
         test_mses.append(testing_mses)
-        print(testing_losses, testing_ades, testing_mses, num_batches, testing_runtime)
+        testing_loss = tf.reduce_mean(test_losses)
+        print(test_losses, test_ades, test_mses, num_batches, testing_runtime)
         # Save model weights
         print("Saving model...")
         #tf.saved_model.save(model, "./saved_GRU_Forecasting_Model_weights")
@@ -505,11 +533,15 @@ def main():
         test_losses = 'None'
         test_ades = 'None'
         test_mses = 'None'
+        training_runtime = 'None'
+        testing_runtime = 'None'
         
 
     # Select a sequence from the data for prediction.
     # Again not including the "timesteps" column as in the dataset above.
     #inference_data = test_data[:10, 1:]
+
+    
     # Flatten timesteps as above
     #inference_dim = inference_data.shape[0] * inference_data.shape[1]
     #prediction_inputs = np.reshape(inference_data, (1, inference_data.shape[0], inference_data.shape[1]))
@@ -526,7 +558,22 @@ def main():
     #training_loss = tf.reduce_mean(losses)
     results_logging(epochs, losses, ades, mses, training_runtime, test_losses, test_ades, test_mses, testing_runtime)
 
+    val_data_gen = load_data(batch_size=1, dir='/ltmp/features/val/')
     
+    inference_data = next(val_data_gen)
+    pred_ref = get_reference(inference_data, -30)
+    whole_seq_ref, whole_seq_deltas = get_deltas(inference_data)
+    pred_inputs = whole_seq_deltas[:, :-30, :]
+
+    pred_deltas = model(pred_inputs, initial_state = None).numpy()
+    pred_outputs = undo_deltas(pred_deltas, pred_ref)
+    #print(pred_outputs)
+    pred_inputs = undo_deltas(pred_inputs, whole_seq_ref)
+    truth = undo_deltas(inference_data[:, :-30, :], pred_ref)
+    pred_outputs = prediction_function(model, pred_outputs[:,:-1,:])
+    
+    visualize_trajs(np.squeeze(pred_inputs), np.squeeze(pred_outputs), np.squeeze(truth))
+
     pass
 
 

@@ -7,3 +7,531 @@ Training loss: [0.013522452]
 Training ADE: [3.219587194786669]
 Training MSE: [42.13170300865371]
 --------------------------------------------------------------------------------
+23:30 on Tuesday, May 10
+Number of epochs: 1
+Training loss: [0.013331517]
+Training ADE: [3.265728479398488]
+Training MSE: [40.40937338336389]
+Training runtime: 374.33182287216187
+Testing loss: [nan]
+Testing ADE: [nan]
+Testing MSE: [nan]
+Testing runtime: 38.93038773536682
+--------------------------------------------------------------------------------
+23:45 on Tuesday, May 10
+Number of epochs: 1
+Training loss: [0.01367381]
+Training ADE: [3.2504310875830504]
+Training MSE: [42.26727750864258]
+Training runtime: 374.03158593177795
+Testing loss: [nan]
+Testing ADE: [nan]
+Testing MSE: [nan]
+Testing runtime: 38.90566873550415
+--------------------------------------------------------------------------------
+02:04 on Wednesday, May 11
+Number of epochs: 1
+Training loss: [0.013442027]
+Training ADE: [3.12999736702758]
+Training MSE: [41.476045520762646]
+Training runtime: 368.7555739879608
+Testing loss: [0.00040694693]
+Testing ADE: [0.3775704504763008]
+Testing MSE: [0.14673073491229352]
+Testing runtime: 32.67138719558716
+--------------------------------------------------------------------------------
+02:20 on Wednesday, May 11
+Number of epochs: 1
+Training loss: [0.013853346]
+Training ADE: [2.4318518915890412]
+Training MSE: [23.36192680365255]
+Training runtime: 312.96161222457886
+Testing loss: [0.0004863683]
+Testing ADE: [0.4679725053553623]
+Testing MSE: [0.18602563801899746]
+Testing runtime: 32.89731168746948
+--------------------------------------------------------------------------------
+02:37 on Wednesday, May 11
+Number of epochs: 1
+Training loss: [0.014592116]
+Training ADE: [3.281964983790466]
+Training MSE: [44.932268745563086]
+Training runtime: 373.0352773666382
+Testing loss: [0.0009732525]
+Testing ADE: [1.2283120990471388]
+Testing MSE: [1.2163372042867466]
+Testing runtime: 32.87449598312378
+--------------------------------------------------------------------------------
+05:44 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+05:52 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+05:55 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+05:56 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+05:58 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:02 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:05 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:07 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:08 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:14 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:15 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:22 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:23 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:24 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:25 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:26 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:29 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:34 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:44 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:48 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:50 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:52 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:54 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:55 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:57 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+06:58 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:00 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:01 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:03 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:04 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:05 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:06 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:08 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:28 on Wednesday, May 11
+Number of epochs: 1
+Training loss: [111.84229]
+Training ADE: [31.13037307418685]
+Training MSE: [507.60801855770103]
+Training runtime: 373.2722792625427
+Testing loss: [49.56884]
+Testing ADE: [22.334050294120285]
+Testing MSE: [255.05542688164073]
+Testing runtime: 32.50159955024719
+--------------------------------------------------------------------------------
+07:33 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:35 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:36 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:39 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:54 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:56 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:57 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+07:58 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
+08:01 on Wednesday, May 11
+Number of epochs: None
+Training loss: None
+Training ADE: None
+Training MSE: None
+Training runtime: None
+Testing loss: None
+Testing ADE: None
+Testing MSE: None
+Testing runtime: None
+--------------------------------------------------------------------------------
