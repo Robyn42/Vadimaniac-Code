@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from model_config import OBS_LEN, PRED_LEN
+from model_config import OBS_LEN, PRED_LEN, FULL_LEN
 import os
 import tensorflow as tf
 
@@ -13,7 +13,9 @@ def file_gen(dir):
         yield os.path.join(dir, file)
 
 
-def load_data(mode="social", batch_size=1000, dir ='../../features/val/'):
+def load_data(mode="social",
+              batch_size=1000,
+              dir='../../features/val/'):
     """
     Generate data batch by batch.
 
@@ -39,6 +41,8 @@ def load_data(mode="social", batch_size=1000, dir ='../../features/val/'):
             'position_x': 6,
             'position_y': 7
         }
+    # number timesteps to avoid using, in case we don't use full time sequences
+    skipped_rows = FULL_LEN - OBS_LEN - PRED_LEN
 
     batch_size = batch_size
     batch_data = np.zeros((batch_size, OBS_LEN + PRED_LEN, len(input_features)))
@@ -47,14 +51,16 @@ def load_data(mode="social", batch_size=1000, dir ='../../features/val/'):
     i = 0
     for file in files:
         batch_data[i % batch_size] = pd.read_csv(file,
-                                                 usecols=input_features.keys()).values
+                                                 usecols=input_features.keys(),
+                                                 ).values[skipped_rows:]
+        if i == 0:
+            # TODO
+            print(batch_data[i % batch_size])
         i += 1
         if i % batch_size == 0:
             yield batch_data
             batch_data = np.zeros((batch_size, OBS_LEN + PRED_LEN, len(input_features)))
 
-        if i >= 1000:
-            break
     if i % batch_size != 0:
         yield batch_data
 

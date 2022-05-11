@@ -10,4 +10,9 @@ OUTPUT_FEATURES = {
     "none": ["position_x", "position_y"],
 }
 
-OBS_LEN, PRED_LEN = 80, 30
+
+FULL_LEN = 110 # Length of full dataset
+# OBS_LEN, PRED_LEN = 80, 30 # Baseline
+# OBS_LEN, PRED_LEN = 44, 66  # 2:3 ratio between observe and predict
+# OBS_LEN, PRED_LEN = 55, 55 # Same as the Lyft dataset
+OBS_LEN, PRED_LEN = 20, 30 # 2:3 ratio between observe and predict
