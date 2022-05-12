@@ -13,7 +13,7 @@ from util.visualize import visualize_trajs
 import time, os
 
 class GRU_ObsPred_Model(tf.keras.Model):
-    def __init__(self, units=128):
+    def __init__(self, units=128, recursive_tail=True):
 
         """
         The Model is a GRU version of an obsever/predictor model from the
@@ -42,6 +42,7 @@ class GRU_ObsPred_Model(tf.keras.Model):
         self.leaky_relu_alpha = 3e-1
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         self.loss = tf.keras.losses.MeanSquaredError(name="MSE Loss")
+        self.recursive_tail = recursive_tail
 
         # Initialize model layers.
         # Observer inputs include both locational and social features
@@ -69,18 +70,29 @@ class GRU_ObsPred_Model(tf.keras.Model):
 
         # pred_outputs = tf.zeros((self.batch_size, 0, self.output))
         pred_outputs = []
-        pred_input = inputs[:, -1, :2]
+        if self.recursive_tail:
+            pred_input = inputs[:, -1, :2]
+        else:
+            # Squeeze only 1st axis in case the batch size is 1.
+            # pred_input = tf.squeeze(obs_seq[:, -1, :], axis=1)
+            pred_input = obs_seq[:, -1, :]
+
         pred_state = obs_final_state
         for di in range(self.pred_len):
         #     print("pred input shape", pred_input.shape)
         #     print("pred hidden state shape", pred_state.shape)
             pred_output, pred_state = self.predictor_cell(pred_input, pred_state)
-            pred_output = self.predictor_tail(pred_output)
+            if self.recursive_tail:
+                pred_output = self.predictor_tail(pred_output)
             pred_outputs.append(pred_output)
             pred_input = pred_output
+
             # pred_outputs = tf.concat((pred_outputs, pred_output), axis=1)
 
+        if not self.recursive_tail:
+            pred_outputs = [self.predictor_tail(pred_output) for pred_output in pred_outputs]
         pred_outputs = tf.stack(pred_outputs, axis=1)
+        # print(pred_outputs.shape)
         return pred_outputs
 
 
@@ -221,7 +233,7 @@ def print_and_log(line, dst):
     with open(dst, 'a') as log:
         log.write(f'{line}\n')
 
-def run():
+def run(unit_size=128):
     """
     Main function.
     
@@ -235,27 +247,34 @@ def run():
     "y" or "true_values" needs to be removed as well. 
     """
 
-    continue_training = True
-    starting_epoch = 1  # READ the log and set this as the last epoch there!!!
-    epochs = 1
-    unit_size = 64
+    continue_training = False
+    # Number for the first epoch this training session starts at.
+    starting_epoch = 0  # READ the log and set this as the last epoch there!!! Zero-indexed!!!
+    epochs = 2
+    unit_size = 256
     saved_model = False
+    rec_tail = True
 
-    results_dir = f"./saved_PRED_{PRED_LEN}_Model/{unit_size}"
+    if unit_size != 128:
+        results_dir = f"./experiments/units/{unit_size}"
+    elif rec_tail:
+        results_dir = f"./experiments/pred_len/{PRED_LEN}_{OBS_LEN}"
+    else:
+        results_dir = f"./experiments/pred_len_flat_tail/{PRED_LEN}_{OBS_LEN}"
     if not os.path.exists(results_dir):
+        print("making", results_dir)
         os.mkdir(results_dir)
     saved_weights_path = f"{results_dir}/weights/curr/"
     saved_weights_per_epoch = f"{results_dir}/weights/per_epoch/"
     log_dst = f"{results_dir}/pred_{PRED_LEN}_{unit_size}_log"
 
+    model = GRU_ObsPred_Model(units=unit_size, recursive_tail=rec_tail)
     if saved_model == False:
         print_and_log(f"Start training at epoch={starting_epoch}...", dst=log_dst)
 
-        model = GRU_ObsPred_Model(units=unit_size)
-
         if continue_training:
             model.load_weights(saved_weights_path)
-            print_and_log("Loading weights to continue training", dst=log_dst)
+            print_and_log(f"Loading weights at {saved_weights_path}t o continue training", dst=log_dst)
 
 
         # Train model for a number of epochs.
@@ -314,8 +333,9 @@ def run():
         truth = undo_deltas(inference_data[:, -PRED_LEN:, :], pred_ref)
 
         visualize_trajs(np.squeeze(pred_inputs), np.squeeze(pred_outputs),
-                        np.squeeze(truth), path=f"{results_dir}/obs_pred_sample_result_{j}.png")
+                        np.squeeze(truth), path=f"{results_dir}/obs_pred_sample_result_{j}_e{starting_epoch + epochs - 1}.png")
     model.summary()
 
 if __name__ == '__main__':
-    run()
+    for unit_size in [8, 16, 32, 512, 1024, 2048, 4096, 4096*2, 4096*4]:
+        run(unit_size)
