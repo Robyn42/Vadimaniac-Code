@@ -11,4 +11,4 @@ tensorflow-gan==2.0.0
 tensorflow-hub==0.9.0
 imageio==2.9.0
 tqdm==4.48.2
-pyarrow==6.0.1
+pyarrow==14.0.1
